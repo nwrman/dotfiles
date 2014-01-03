@@ -14,7 +14,7 @@ HIST_STAMPS="dd.mm.yyyy"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git)
+plugins=(profiles git git-extras gitignore history-substring-search ssh-agent command-not-found extract rvm z)
 
 # Detect if we have oh-my-zsh and source it
 if [ -f $ZSH/oh-my-zsh.sh ]
@@ -26,6 +26,10 @@ fi
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:~/bin"
 
+# ssh-agent config
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent lifetime 8h
+
 # Detect if we are using RVM and if so, add to the path
 if [ -f $HOME/.rvm/bin ]
 then
@@ -36,4 +40,6 @@ fi
 if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]
 then
   source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+  fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fi
+
