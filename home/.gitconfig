@@ -3,3 +3,7 @@
 	email = nwrman@gmail.com
 [push]
 	default = matching
+[color]
+	diff = auto
+	status = auto
+	branch = auto
