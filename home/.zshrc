@@ -24,7 +24,7 @@ fi
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:~/bin"
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:~/bin"
 
 # ssh-agent config
 zstyle :omz:plugins:ssh-agent agent-forwarding on
