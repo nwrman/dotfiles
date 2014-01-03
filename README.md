@@ -1,4 +1,4 @@
 dotfiles
 ========
 
-The repo that holds my castles
+The repo that holds my homeshick castles
