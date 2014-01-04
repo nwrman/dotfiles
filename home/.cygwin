@@ -1,0 +1,8 @@
+# Cygwin specific config
+
+# Forcing windows style symlinks
+# export CYGWIN=winsymlinks:nativestrict
+
+alias apt-cygports='apt-cyg -m ftp://sourceware.org/pub/cygwinports/'
+
+
