@@ -1,0 +1,15 @@
+# Common configurations that have to loaded in bashrc and zshrc
+
+alias agent='eval `ssh-agent` && ssh-add'
+alias screend='screen -D -RR'
+
+# Detect if we are using RVM and if so, add to the path
+if [ -f $HOME/.rvm/bin ]
+then
+  PATH=$PATH:$HOME/.rvm/bin
+fi
+
+#Detect if we are in Cygwin, and if so source Cygwin configs
+if [ $(uname -o) = "Cygwin" ]; then
+  source "$HOME/.cygwin"
+fi
