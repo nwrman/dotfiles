@@ -30,12 +30,6 @@ export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent lifetime 8h
 
-# Detect if we are using RVM and if so, add to the path
-if [ -f $HOME/.rvm/bin ]
-then
-  PATH=$PATH:$HOME/.rvm/bin
-fi
-
 # Detect if we have homeshick (we always should, but anyways)
 if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]
 then
@@ -43,3 +37,8 @@ then
   fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fi
 
+# Load common config if exists
+if [ -f $HOME/.commonrc ]
+then
+  source "$HOME/.commonrc"
+fi

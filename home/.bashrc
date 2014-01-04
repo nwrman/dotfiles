@@ -150,9 +150,6 @@ alias du='du -sckh'       # Makes a more readable output.
 alias df='df -kTh'
 
 
-alias agent='eval `ssh-agent` && ssh-add'
-alias screend='screen -D -RR'
-
 
 #-------------------------------------------------------------
 # The 'ls' family (this assumes you use a recent GNU ls)
@@ -215,27 +212,6 @@ function man()
         command man -F -a "$i"
     done
 }
-
-
-#-------------------------------------------------------------
-# Git Aliases
-#-------------------------------------------------------------
-
-alias gitst='git status'
-
-
-#-------------------------------------------------------------
-# Brunch.io Aliases
-#-------------------------------------------------------------
-
-alias brw='brunch w -s'
-
-
-#-------------------------------------------------------------
-# CakePHP Alias
-#-------------------------------------------------------------
-
-alias cake='/cygdrive/d/projects/cinco/zimat_db/lib/Cake/Console/cake.bat'
 
 
 #-------------------------------------------------------------
@@ -837,25 +813,15 @@ init_agent() {
     fi
 }
 
-#Execute agent initialization on log on, it will ask for the passphrase
-#only on first logon that doesn't detect the agent
-#init_agent Causes a lot of troubles if left on every logon, if necessary inoke it manually
-
-# Local Variables:
-# mode:shell-script
-# sh-shell:bash
-# End:
-
-if [ -f $HOME/.rvm/bin ]
+# Detect if we have homeshick (we always should, but anyways)
+if [ -f $HOME/.homesick/repos/homeshick/homeshick.sh ]
 then
-  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+  source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+  source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
 fi
 
-alias apt-cygports='apt-cyg -m ftp://sourceware.org/pub/cygwinports/'
-
-##### Cygwin Section
-alias vagrant='/cygdrive/d/appz/vagrant/vagrant/bin/vagrant.bat'
-
-
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-source "$HOME/.homesick/repos/homeshick/completions/homeshick-completion.bash"
+# Load common config if exists
+if [ -f $HOME/.commonrc ]
+then
+  source "$HOME/.commonrc"
+fi
