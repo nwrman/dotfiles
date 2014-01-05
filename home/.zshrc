@@ -14,7 +14,7 @@ HIST_STAMPS="dd.mm.yyyy"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(profiles git git-extras gitignore history-substring-search ssh-agent command-not-found extract rvm z)
+plugins=(profiles git git-extras git-flow gitignore history-substring-search ssh-agent command-not-found extract rvm z)
 
 # Detect if we have oh-my-zsh and source it
 if [ -f $ZSH/oh-my-zsh.sh ]
