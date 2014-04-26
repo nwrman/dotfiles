@@ -4,3 +4,15 @@
 export "CYGWIN=winsymlinks:lnk"
 
 alias apt-cygports='apt-cyg -m ftp://sourceware.org/pub/cygwinports/'
+
+# alias launch="explorer $(cygpath -wla $(1))"
+
+# alias test="echo $(cygpath -wla $(1))"
+
+function launch(){
+    if [ $# -eq 0 ]; then
+        explorer.exe $( cygpath `pwd` -w ) & >> /dev/null
+    else
+        explorer.exe $( cygpath $1 -w ) & >> /dev/null
+    fi;
+}
