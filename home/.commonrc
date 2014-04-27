@@ -19,3 +19,6 @@ fi
 if [ $(uname -o) = "Cygwin" ]; then
   source "$HOME/.cygwin"
 fi
+
+
+alias t="vendor/bin/phpunit"
