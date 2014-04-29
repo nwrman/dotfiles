@@ -1,7 +1,11 @@
 {
 	"installed_packages":
 	[
+		"AdvancedNewFile",
+		"Alignment",
 		"ApacheConf.tmLanguage",
+		"DocBlockr",
+		"Emmet",
 		"INI",
 		"Monokai Gray",
 		"Theme - Afterglow"
