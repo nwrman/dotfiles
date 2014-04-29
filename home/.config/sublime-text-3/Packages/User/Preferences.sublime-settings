@@ -1,44 +1,54 @@
 {
 	"auto_complete_commit_on_tab": true,
-    "auto_complete_with_fields": true,
+	"auto_complete_with_fields": true,
+	"bold_folder_labels": true,
+	"caret_extra_bottom": 1,
+	"caret_extra_top": 1,
+	"caret_style": "phase",
+	"close_windows_when_empty": false,
 	"color_scheme": "Packages/Monokai Gray/MonokaiGray.tmTheme",
 	"default_encoding": "UTF-8",
 	"default_line_ending": "unix",
 	"dictionary": "Packages/Language - English/en_US.dic",
 	"ensure_newline_at_eof_on_save": true,
 	"fallback_encoding": "UTF-8",
+	"folder_exclude_patterns":
+	[
+		".svn",
+		".git",
+		".hg",
+		"CVS",
+		"node_modules",
+		"vendor"
+	],
 	"font_face": "Source Code Pro",
 	"font_size": 13,
+	"gutter": true,
+	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
 		"Vintage"
 	],
+	"indent_guide_options":
+	[
+		"draw_active"
+	],
 	"indent_to_bracket": true,
+	"line_numbers": true,
 	"rulers":
 	[
 		78
 	],
+	"shift_tab_unindent": true,
+	"show_encoding": true,
+	"show_line_endings": true,
 	"show_tab_close_buttons": false,
+	"tab_size": 4,
 	"tabs_small": true,
 	"theme": "Afterglow-blue.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_trailing_white_space_on_save": true,
 	"word_wrap": "false",
-	"gutter" : true,
-	"line_numbers" : true,
-	"tab_size" : 4,
-	"indent_to_bracket": true,
-	"wrap_width" : 80,
-    "highlight_line": true,
-    "caret_style": "phase",
-    "caret_extra_top": 1,
-    "caret_extra_bottom": 1,
-    "indent_guide_options": ["draw_active"],
-	"shift_tab_unindent": true,
-    "bold_folder_labels": true,
-    "show_encoding": true,
-    "show_line_endings": true,
-    "close_windows_when_empty": true,
-    "folder_exclude_patterns": [".svn", ".git", ".hg", "CVS", "node_modules" ,"vendor"]
+	"wrap_width": 80
 }
