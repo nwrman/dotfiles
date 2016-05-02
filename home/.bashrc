@@ -94,19 +94,19 @@ RED=$txtred
 NC=$txtrst
 
 #Adding git command completion
-source ~/bin/.git-completion.sh
-source ~/bin/git-flow-completion.bash
+#source ~/bin/.git-completion.sh
+#source ~/bin/git-flow-completion.bash
 
 #This is for showing current git branch
-source ~/bin/.git-prompt.sh
-GIT_PS1_SHOWDIRTYSTATE=true
+#source ~/bin/.git-prompt.sh
+#GIT_PS1_SHOWDIRTYSTATE=true
 # GIT_PS1_SHOWSTASHSTATE=true
 # GIT_PS1_SHOWUNTRACKEDFILES=true
 # GIT_PS1_SHOWUPSTREAM=auto
 
 print_before_the_prompt () {
-    git_ps1=$(__git_ps1 "(%s)")
-    printf "\n $txtred%s$txtpur%s$txtred> $bldgrn%s $txtpur%s\n$txtrst" "$USER" "@$HOST" "$PWD" "$git_ps1"
+    #git_ps1=$(__git_ps1 "(%s)")
+    printf "\n $txtred%s$txtpur%s$txtred> $bldgrn%s $txtpur%s\n$txtrst" "$USER" "@$HOST" "$PWD"
 }
 
 PROMPT_COMMAND=print_before_the_prompt
