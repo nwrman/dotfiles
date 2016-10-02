@@ -1,2 +1,8 @@
+package config
+package fasd
+package git-flow
+package grc
+package local-config
+package tmux-zen
 theme agnoster
 theme default
