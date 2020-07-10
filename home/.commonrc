@@ -15,10 +15,6 @@ then
   source $HOME/.nvm/nvm.sh
 fi
 
-#Detect if we are in Cygwin, and if so source Cygwin configs
-if [ $(uname -o) = "Cygwin" ]; then
-  source "$HOME/.cygwin"
-fi
-
-
 alias t="vendor/bin/phpunit"
+alias a="php artisan"
+alias nah="git reset --hard && git clean -df"

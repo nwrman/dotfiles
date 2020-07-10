@@ -1,9 +1,20 @@
 [user]
-	name = nwrman
-	email = nwrman@gmail.com
+	name = jonathan-hf
+	email = jonathan.hf@globant.com
 [push]
-	default = matching
+	default = current
 [color]
 	diff = auto
 	status = auto
 	branch = auto
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[pull]
+	rebase = true
+[gc]
+	autoDetach = false
+[gitflow]
+	multi-hotfix = true
