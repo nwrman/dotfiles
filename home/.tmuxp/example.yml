@@ -1,0 +1,8 @@
+session_name: example-session
+windows:
+- window_name: example window
+  layout: main-horizontal
+  panes:
+    - ls
+    - ls
+    - ls
