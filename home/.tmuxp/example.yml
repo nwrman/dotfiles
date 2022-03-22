@@ -2,7 +2,9 @@ session_name: example-session
 windows:
 - window_name: example window
   layout: main-horizontal
+  options:
+    main-pane-height: 15
   panes:
-    - ls
-    - ls
-    - ls
+    -
+    -
+    -
