@@ -25,25 +25,12 @@ fi
 # Custom PATH
 export PATH=$PATH:~/.composer/vendor/bin
 
-# Aliases
-alias agent='eval `ssh-agent` && ssh-add'
-alias t="./vendor/bin/phpunit"
-alias ct="composer test"
-alias cut="composer test:unit"
-alias ctt="composer test:types"
-alias cl="composer lint"
-alias a="php artisan"
-alias pt="./vendor/bin/pest"
-alias nah="git reset --hard && git clean -df"
-alias dcu="docker-compose up -d"
-alias dcs="docker-compose stop"
-alias dcr="dcs && dcu"
-alias gp="git pull --rebase --autostash"
-alias gu="git reset --soft HEAD~1"
-alias magento="php -d memory_limit=2048M ./bin/magento"
-
 # Source local .zshrc
-[[ ! -f $HOME/.local.zshrc ]] || source $HOME/.local.zshrc
+if [[ -s $HOME/.zsh ]]; then
+  for file in $HOME/.zsh/*; do
+    source "$file"
+  done
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

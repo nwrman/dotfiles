@@ -21,7 +21,8 @@ setopt EXTENDED_GLOB
 
     if [ -f "${ZDOTDIR:-$HOME}/.${rcfile:t}" ]
       then
-      mv "${ZDOTDIR:-$HOME}/.${rcfile:t}" "${ZDOTDIR:-$HOME}/.zsh_$current_date_time.bak/"
+      cp -L "${ZDOTDIR:-$HOME}/.${rcfile:t}" "${ZDOTDIR:-$HOME}/.zsh_$current_date_time.bak/"
+      rm -f "${ZDOTDIR:-$HOME}/.${rcfile:t}"
       echo "${ZDOTDIR:-$HOME}/.${rcfile:t} is backed up"
     fi
 
