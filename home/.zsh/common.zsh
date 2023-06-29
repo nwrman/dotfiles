@@ -3,7 +3,14 @@ if [[ -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
   export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin"
 fi
 
-alias t="/.vendor/bin/phpunit"
+# SmartGit
+if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
+  export PATH="$PATH:/Applications/SmartGit.app/Contents/MacOS/"
+fi
+
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+alias t="./vendor/bin/phpunit"
 alias ct="composer test"
 alias cut="composer test:unit"
 alias ctt="composer test:types"
@@ -21,6 +28,9 @@ alias magento="php -d memory_limit=2048M ./bin/magento"
 # GIT
 
 alias g='git'
+
+alias gsw='git switch -'
+
 alias gco='git checkout'
 alias gco='git checkout'
 alias gc='git commit --verbose'
