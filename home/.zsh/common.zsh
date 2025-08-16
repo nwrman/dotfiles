@@ -8,30 +8,39 @@ if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
   export PATH="$PATH:/Applications/SmartGit.app/Contents/MacOS/"
 fi
 
+export PATH="~/.bin:./vendor/bin:./node_modules/bin:$PATH"
+
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-alias t="./vendor/bin/phpunit"
+alias t="./vendor/bin/pest"
+alias tb="./vendor/bin/pest --bail"
 alias ct="composer test"
 alias cut="composer test:unit"
 alias ctt="composer test:types"
 alias cl="composer lint"
 alias a="php artisan"
-alias pt="./vendor/bin/pest"
-alias nah="git reset --hard && git clean -df"
 alias dcu="docker-compose up -d"
 alias dcs="docker-compose stop"
 alias dcr="dcs && dcu"
 alias gp="git pull --rebase --autostash"
 alias gu="git reset --soft HEAD~1"
 alias magento="php -d memory_limit=2048M ./bin/magento"
+alias d="npm run dev"
+alias nr="npm run"
+alias pn="pnpm"
+alias pnx="pnpm --dlx"
+alias pd="pnpm run dev"
+alias c="composer"
+
 
 # GIT
+
+alias nah="git reset --hard && git clean -df"
 
 alias g='git'
 
 alias gsw='git switch -'
 
-alias gco='git checkout'
 alias gco='git checkout'
 alias gc='git commit --verbose'
 alias gcp='git cherry-pick --ff'
