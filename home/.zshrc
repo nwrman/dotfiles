@@ -60,9 +60,37 @@ zinit cdreplay -q
 
 # Keybindings
 bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
+# bindkey '^p' history-search-backward
+# bindkey '^n' history-search-forward
+# bindkey '^[w' kill-region
+
+# Navigation keys
+bindkey '^[[H' beginning-of-line     # Home
+bindkey '^[[F' end-of-line           # End
+bindkey '^[[1~' beginning-of-line    # Home (alternative)
+bindkey '^[[4~' end-of-line          # End (alternative)
+
+# Word navigation
+bindkey '^[[1;5C' forward-word       # Ctrl+Right
+bindkey '^[[1;5D' backward-word      # Ctrl+Left
+bindkey '^[^[[C' forward-word        # Alt+Right  
+bindkey '^[^[[D' backward-word       # Alt+Left
+
+# Delete operations
+bindkey '^[[3~' delete-char          # Delete
+bindkey '^H' backward-delete-char    # Backspace
+bindkey '^W' backward-kill-word      # Ctrl+W
+bindkey '^[[3;5~' kill-word          # Ctrl+Delete
+
+# Line operations
+bindkey '^A' beginning-of-line       # Ctrl+A
+bindkey '^E' end-of-line             # Ctrl+E
+bindkey '^K' kill-line               # Ctrl+K
+bindkey '^U' backward-kill-line      # Ctrl+U
+
+# History navigation
+bindkey '^[[5~' history-search-backward  # Page Up
+bindkey '^[[6~' history-search-forward   # Page Down
 
 # History
 HISTSIZE=10000
