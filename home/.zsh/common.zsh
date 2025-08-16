@@ -8,7 +8,21 @@ if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
   export PATH="$PATH:/Applications/SmartGit.app/Contents/MacOS/"
 fi
 
-export PATH="~/.bin:./vendor/bin:./node_modules/bin:$PATH"
+# Composer
+if [[ -s "~/.composer/vendor/bin" ]]; then
+  export PATH=$PATH:~/.composer/vendor/bin
+fi
+
+# nvm
+[[ ! -f $HOME/.nvm/nvm.sh ]] || source $HOME/.nvm/nvm.sh
+
+# Local .bin directory for random binaries
+if [[ -s "~/.bin" ]]; then
+  export PATH=$PATH:~/.bin
+fi
+
+# Add current directory bin folders for Composer and Node
+export PATH="./vendor/bin:./node_modules/bin:$PATH"
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 
@@ -31,6 +45,8 @@ alias pn="pnpm"
 alias pnx="pnpm --dlx"
 alias pd="pnpm run dev"
 alias c="composer"
+alias pbc=pbcopy
+alias pbp=pbpaste
 
 
 # GIT
@@ -74,3 +90,29 @@ alias gst='git status --ignore-submodules=$_git_status_ignore_submodules'
 alias gdiff='git diff --no-ext-diff'
 alias grs='git reset --soft'
 alias grh='git reset --hard'
+
+# ls
+
+alias l='ls -1A'
+alias la='ll -A'
+alias lc='lt -c'
+alias lk='ll -Sr'
+alias ll='ls -lh'
+alias lm='la | "$PAGER"'
+alias ln='nocorrect ln -i'
+alias lni='nocorrect ln -i'
+alias locate='noglob locate'
+alias lr='ll -R'
+alias ls='ls -G'
+alias lt='ll -tr'
+alias lu='lt -u'
+
+# Better command defaults
+
+alias cp='nocorrect cp -i'
+alias grep='nocorrect grep --color=auto'
+alias man='nocorrect man'
+alias mkdir='nocorrect mkdir -p'
+alias mv='nocorrect mv -i'
+alias rm='nocorrect rm -i'
+alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
