@@ -43,8 +43,10 @@
           pkgs.keka
           pkgs.neovim
           pkgs.httpie
+          pkgs.appcleaner
           pkgs.fzf
           pkgs.zoxide
+          pkgs.mysql-client
         ];
 
       homebrew = {
@@ -53,7 +55,7 @@
         brews = [
           "mas"
         ];
-        
+
         casks = [
           "firefox"
           "sublime-text"
@@ -70,17 +72,24 @@
           "transnomino"
           "whatsapp"
           "smartgit"
+          "appcleaner"
+          "shottr"
+          "keyclu"
+          "homerow"
+          "kindavim"
         ];
 
         masApps = {
           "ColorSlurp" = 1287239339;
           "Meeter" = 1510445899;
           "Toggl" = 1291898086;
+          "DropOver" = 1355679052;
         };
       };
 
       fonts.packages = with pkgs; [
         meslo-lgs-nf
+        source-code-pro
         nerd-fonts.fira-code
       ];
 
