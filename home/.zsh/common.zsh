@@ -17,8 +17,8 @@ fi
 [[ ! -f $HOME/.nvm/nvm.sh ]] || source $HOME/.nvm/nvm.sh
 
 # Local .bin directory for random binaries
-if [[ -s "~/.bin" ]]; then
-  export PATH=$PATH:~/.bin
+if [[ -d "$HOME/.bin" ]]; then
+  export PATH="$HOME/.bin:$PATH"
 fi
 
 # Add current directory bin folders for Composer and Node
