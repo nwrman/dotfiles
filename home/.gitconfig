@@ -27,3 +27,5 @@
 	fetchalways = false
 	update = true
 	initializenew = true
+[rebase]
+	autoStash = true
