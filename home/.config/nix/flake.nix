@@ -23,7 +23,6 @@
           pkgs.iterm2
           pkgs.bartender
           pkgs.cyberduck
-          pkgs.gimp
           pkgs.inkscape
           pkgs.numi
           pkgs.raycast
@@ -45,7 +44,7 @@
           pkgs.appcleaner
           pkgs.fzf
           pkgs.zoxide
-          pkgs.mysql-client
+          pkgs.mariadb.client
           pkgs.ffmpegthumbnailer
           pkgs.jq
           pkgs.poppler
@@ -53,7 +52,6 @@
           pkgs.ripgrep
           pkgs.bat
           pkgs.eza
-          pkgs.gitui
           pkgs.dust
           pkgs.dua
           pkgs.fselect
@@ -103,8 +101,6 @@
           "notion"
           "xnviewmp"
           "laradumps"
-          "php@8.1"
-          "php@8.3"
         ];
 
         masApps = {
@@ -132,16 +128,16 @@
         enable = true;
 
         # Choose your theme - you can change this to any available theme
-        theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.catppuccin;
+        theme = spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.themes.catppuccin;
         # Alternative themes you can try:
-        # theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.dribbblish;
-        # theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.sleek;
+        # theme = spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.themes.dribbblish;
+        # theme = spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.themes.sleek;
 
         # Color scheme for the theme (if supported)
         colorScheme = "mocha";
 
         # Extensions to enable
-        enabledExtensions = with spicetify-nix.legacyPackages.${pkgs.system}.extensions; [
+        enabledExtensions = with spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.extensions; [
           shuffle
           hidePodcasts
           goToSong
@@ -154,7 +150,7 @@
         ];
 
         # Custom apps (optional)
-        enabledCustomApps = with spicetify-nix.legacyPackages.${pkgs.system}.apps; [
+        enabledCustomApps = with spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.apps; [
           marketplace
           newReleases
         ];
