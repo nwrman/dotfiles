@@ -6,9 +6,10 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, spicetify-nix }:
   let
     configuration = { pkgs, ... }: {
 
@@ -27,10 +28,8 @@
           pkgs.numi
           pkgs.raycast
           pkgs.rectangle
-          pkgs.spotify
           pkgs.tableplus
           pkgs.vscode
-          pkgs.iterm2
           pkgs.curl
           pkgs.wget
           pkgs.ffmpeg
@@ -47,14 +46,37 @@
           pkgs.fzf
           pkgs.zoxide
           pkgs.mysql-client
+          pkgs.ffmpegthumbnailer
+          pkgs.jq
+          pkgs.poppler
+          pkgs.fd
+          pkgs.ripgrep
+          pkgs.bat
+          pkgs.eza
+          pkgs.gitui
+          pkgs.dust
+          pkgs.dua
+          pkgs.fselect
+          pkgs.delta
+          pkgs.mprocs
+          pkgs.kondo
         ];
 
       homebrew = {
         enable = true;
 
+        taps = [
+          "laradumps/app"
+          "shivammathur/php"
+        ];
+
         brews = [
           "mas"
         ];
+
+        caskArgs = {
+          no_quarantine = true;
+        };
 
         casks = [
           "firefox"
@@ -77,6 +99,12 @@
           "keyclu"
           "homerow"
           "kindavim"
+          "obsidian"
+          "notion"
+          "xnviewmp"
+          "laradumps"
+          "php@8.1"
+          "php@8.3"
         ];
 
         masApps = {
@@ -85,6 +113,12 @@
           "Toggl" = 1291898086;
           "DropOver" = 1355679052;
         };
+
+        # Delete homebrew apps not managed by nix
+        onActivation.cleanup = "zap";
+
+        # Update brew packages
+        onActivation.upgrade = true;
       };
 
       fonts.packages = with pkgs; [
@@ -93,6 +127,39 @@
         nerd-fonts.fira-code
       ];
 
+      # Spicetify configuration
+      programs.spicetify = {
+        enable = true;
+
+        # Choose your theme - you can change this to any available theme
+        theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.catppuccin;
+        # Alternative themes you can try:
+        # theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.dribbblish;
+        # theme = spicetify-nix.legacyPackages.${pkgs.system}.themes.sleek;
+
+        # Color scheme for the theme (if supported)
+        colorScheme = "mocha";
+
+        # Extensions to enable
+        enabledExtensions = with spicetify-nix.legacyPackages.${pkgs.system}.extensions; [
+          shuffle
+          hidePodcasts
+          goToSong
+          showQueueDuration
+          history
+          playNext
+          playingSource
+          addToQueueTop
+          oldLikeButton
+        ];
+
+        # Custom apps (optional)
+        enabledCustomApps = with spicetify-nix.legacyPackages.${pkgs.system}.apps; [
+          marketplace
+          newReleases
+        ];
+
+      };
 
       security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -113,7 +180,6 @@
           wvous-tr-corner = 2; # Mission control Top Right Hot Corner
           wvous-br-corner = 3; # Application windows Bottom Right Hot Corner
         };
-
 
         finder = {
           ShowStatusBar = true;
@@ -140,15 +206,31 @@
           FirstClickThreshold = 1;
         };
 
-
         NSGlobalDomain = {
           AppleInterfaceStyle = "Dark";
           AppleICUForce24HourTime = true;
+          AppleTemperatureUnit = "Celsius";
+          AppleMeasurementUnits = "Centimeters";
+          AppleMetricUnits = 1;
 
           InitialKeyRepeat = 15;
           KeyRepeat = 1;
         };
+
+        CustomUserPreferences = {
+          NSGlobalDomain = {
+            AppleLocale = "en_MX";
+            AppleFirstWeekday = {
+              gregorian = 2; # Monday
+            };
+            AppleICUDateFormatStrings = {
+              "1" = "y-MM-dd";
+            };
+          };
+        };
+
       };
+
 
       system.activationScripts.activateSettings.text = ''
        # Following line should allow us to avoid a logout/login cycle
@@ -182,6 +264,7 @@
       modules = [ 
         configuration
         nix-homebrew.darwinModules.nix-homebrew
+        spicetify-nix.darwinModules.default
         {
           nix-homebrew = {
             # Install Homebrew under the default prefix
