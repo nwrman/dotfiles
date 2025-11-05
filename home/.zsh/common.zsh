@@ -5,7 +5,7 @@ fi
 
 # SmartGit
 if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
-  export PATH="$PATH:/Applications/SmartGit.app/Contents/MacOS/"
+  alias sg="/Applications/SmartGit.app/Contents/MacOS/SmartGit --open . &"
 fi
 
 # Composer
@@ -47,7 +47,7 @@ alias pd="pnpm run dev"
 alias c="composer"
 alias pbc=pbcopy
 alias pbp=pbpaste
-
+alias y=yazi
 
 # GIT
 
