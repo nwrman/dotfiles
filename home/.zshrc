@@ -128,5 +128,3 @@ if type zoxide &>/dev/null; then
     alias z=__zoxide_z
     alias zi=__zoxide_zi
 fi
-
-fi
