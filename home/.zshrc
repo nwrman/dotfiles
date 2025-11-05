@@ -125,4 +125,8 @@ fi
 
 if type zoxide &>/dev/null; then
     eval "$(zoxide init --cmd cd zsh)"
+    alias z=__zoxide_z
+    alias zi=__zoxide_zi
+fi
+
 fi
