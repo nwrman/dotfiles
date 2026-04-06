@@ -1,0 +1,19 @@
+# Brewfile.work — work-only packages
+# This file is only installed when ~/.machine-role contains "work"
+# Usage: brew bundle --file=Brewfile.work
+
+# Taps (if needed beyond shared Brewfile)
+
+# CLI Tools
+brew "awscli"
+brew "azure-cli"
+brew "caddy"
+brew "go"
+
+# Casks
+cask "amazon-workspaces"
+cask "claude"
+cask "codex"
+cask "cursor"
+cask "slack"
+cask "zoom"

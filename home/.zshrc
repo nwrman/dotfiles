@@ -16,11 +16,21 @@ if [[ -s "$HOME/.homesick/repos/homeshick/homeshick.sh" ]]; then
   fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fi
 
-# Source local .zshrc
-if [[ -s $HOME/.zsh ]]; then
+# Source local .zsh files (excluding machine-role-specific files)
+if [[ -d $HOME/.zsh ]]; then
   for file in $HOME/.zsh/*; do
+    # Skip work.zsh — it's sourced conditionally below
+    [[ "$(basename "$file")" == "work.zsh" ]] && continue
     source "$file"
   done
+fi
+
+# Source machine-local secrets (API keys, tokens)
+[[ -f ~/.secrets ]] && source ~/.secrets
+
+# Source work-specific config if this is a work machine
+if [[ -f ~/.machine-role ]] && [[ "$(cat ~/.machine-role)" == "work" ]]; then
+  [[ -f ~/.zsh/work.zsh ]] && source ~/.zsh/work.zsh
 fi
 
 # Set the directory we want to store zinit and plugins

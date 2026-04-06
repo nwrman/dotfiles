@@ -41,3 +41,11 @@ else
   homeshick pull dotfiles
   yes | homeshick link dotfiles
 fi
+
+# Run the bootstrap script for full machine setup
+DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"
+if [[ -f "${DOTFILES_DIR}/scripts/bootstrap.sh" ]]; then
+  echo ""
+  echo "==> Running bootstrap script..."
+  bash "${DOTFILES_DIR}/scripts/bootstrap.sh" "$@"
+fi

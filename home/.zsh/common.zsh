@@ -86,7 +86,7 @@ alias gRx='git remote rm'
 alias gRm='git remote rename'
 alias gRu='git remote update'
 
-alias gst='git status --ignore-submodules=$_git_status_ignore_submodules'
+alias gst='git status --ignore-submodules=dirty'
 alias gdiff='git diff --no-ext-diff'
 alias grs='git reset --soft'
 alias grh='git reset --hard'
@@ -116,3 +116,10 @@ alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv -i'
 alias rm='nocorrect rm -i'
 alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# Secrets (API keys, tokens) are loaded from ~/.secrets
+# See ~/.secrets.example for the template.

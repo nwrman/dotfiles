@@ -1,0 +1,93 @@
+# Dotfiles Brewfile — shared across all machines
+# Usage: brew bundle --file=Brewfile
+
+# Taps
+tap "dlvhdr/formulae"
+tap "microsoft/mssql-release"
+tap "shivammathur/php"
+tap "stripe/stripe-cli"
+
+# CLI Tools
+brew "vim"
+brew "ncdu"
+brew "curl"
+brew "wget"
+brew "ffmpeg"
+brew "imagemagick"
+brew "mailpit"
+brew "p7zip"
+brew "yazi"
+brew "tmux"
+brew "neovim"
+brew "httpie"
+brew "fzf"
+brew "zoxide"
+brew "mariadb", restart_service: false  # client only
+brew "ffmpegthumbnailer"
+brew "jq"
+brew "poppler"
+brew "fd"
+brew "ripgrep"
+brew "bat"
+brew "eza"
+brew "dust"
+brew "dua-cli"
+brew "fselect"
+brew "git-delta"
+brew "mprocs"
+brew "kondo"
+brew "mas"
+brew "spicetify-cli"
+brew "gemini-cli"
+brew "gh"
+brew "lazygit"
+brew "terminal-notifier"
+brew "uv"
+brew "dlvhdr/formulae/diffnav"
+brew "microsoft/mssql-release/msodbcsql18"
+brew "stripe/stripe-cli/stripe"
+
+# Casks — GUI apps
+cask_args no_quarantine: true
+
+cask "affinity"
+cask "alt-tab"
+cask "bartender"
+cask "bruno"
+cask "cyberduck"
+cask "dbngin"
+cask "firefox"
+cask "ghostty"
+cask "google-chrome"
+cask "google-chrome@canary"
+cask "handy"
+cask "homerow"
+cask "iterm2"
+cask "jiggler"
+cask "kap"
+cask "logi-options+"
+cask "microsoft-azure-storage-explorer"
+cask "numi"
+cask "obsidian"
+cask "phpstorm"
+cask "raycast"
+cask "keka"
+cask "shottr"
+cask "smartgit"
+cask "sublime-text"
+cask "transnomino"
+cask "whatsapp"
+cask "xnviewmp"
+cask "yaak"
+cask "zed"
+brew "sqlcmd"
+
+# Fonts
+cask "font-meslo-lg-nerd-font"
+cask "font-source-code-pro"
+cask "font-fira-code-nerd-font"
+
+# Mac App Store
+mas "ColorSlurp", id: 1287239339
+mas "Dropover", id: 1355679052
+mas "Toggl Track", id: 1291898086
