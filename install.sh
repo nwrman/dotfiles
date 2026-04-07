@@ -39,7 +39,7 @@ if [[ ! -e "$HOME/.homesick/repos/dotfiles" ]]; then
   yes | homeshick clone nwrman/dotfiles
 else
   homeshick pull dotfiles
-  yes | homeshick link dotfiles
+  yes | homeshick link dotfiles || true
 fi
 
 # Run the bootstrap script for full machine setup

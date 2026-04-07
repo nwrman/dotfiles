@@ -74,17 +74,23 @@ else
   fi
 fi
 
+echo "==> Updating Homebrew..."
+brew update
+
 echo
 
 # ==============================================================================
 # Step 3: Install packages from Brewfile
 # ==============================================================================
+# Accept Microsoft EULA for msodbcsql18 (ODBC driver)
+export HOMEBREW_ACCEPT_EULA=Y
+
 echo "==> Installing shared packages from Brewfile..."
-brew bundle --file="${DOTFILES_DIR}/Brewfile"
+brew bundle --verbose --file="${DOTFILES_DIR}/Brewfile"
 
 if [[ "$ROLE" == "work" && -f "${DOTFILES_DIR}/Brewfile.work" ]]; then
   echo "==> Installing work-only packages from Brewfile.work..."
-  brew bundle --file="${DOTFILES_DIR}/Brewfile.work"
+  brew bundle --verbose --file="${DOTFILES_DIR}/Brewfile.work"
 fi
 
 echo
@@ -103,7 +109,7 @@ fi
 
 source "${HOMESHICK_DIR}/homeshick.sh"
 echo "==> Linking dotfiles..."
-yes | homeshick link dotfiles
+yes | homeshick link dotfiles || true
 
 echo
 
@@ -122,7 +128,14 @@ bash "${SCRIPTS_DIR}/setup-extras.sh"
 echo
 
 # ==============================================================================
-# Step 7: Reminders
+# Step 7: Import app preferences
+# ==============================================================================
+bash "${SCRIPTS_DIR}/import-prefs.sh"
+
+echo
+
+# ==============================================================================
+# Step 8: Reminders
 # ==============================================================================
 echo "========================================"
 echo "  Bootstrap complete!"

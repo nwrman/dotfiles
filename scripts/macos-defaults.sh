@@ -64,6 +64,22 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain KeyRepeat -int 1
 
 # ==============================================================================
+# Keyboard & Text Input
+# ==============================================================================
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticInlinePredictionEnabled -bool false
+defaults write NSGlobalDomain WebAutomaticSpellingCorrectionEnabled -bool false
+
+# ==============================================================================
+# Keyboard Layouts
+# ==============================================================================
+defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string "com.apple.keylayout.LatinAmerican"
+defaults write com.apple.TextInputMenu visible -bool true
+
+# ==============================================================================
 # Custom User Preferences — Locale, weekday, date format
 # ==============================================================================
 defaults write NSGlobalDomain AppleLocale -string "en_MX"
