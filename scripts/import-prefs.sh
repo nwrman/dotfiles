@@ -46,6 +46,8 @@ fi
 echo
 echo "==> Preferences imported. Restart apps for changes to take effect."
 echo
+echo "    NOTE: Keyboard layouts and system shortcuts require a logout/login."
+echo
 echo "    NOTE: Raycast preferences must be imported manually:"
 echo "      1. Open Raycast > Settings > Advanced > Import Settings"
 echo "      2. Select: ${PREFS_DIR}/raycast.rayconfig"

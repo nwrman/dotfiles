@@ -48,11 +48,17 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Add in Powerlevel10k
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins
+# Add in zsh plugins (turbo mode -- loads after prompt)
+zinit ice wait lucid
 zinit light zsh-users/zsh-syntax-highlighting
+zinit ice wait lucid
 zinit light zsh-users/zsh-completions
+zinit ice wait lucid
 zinit light zsh-users/zsh-autosuggestions
+zinit ice wait lucid
 zinit light Aloxaf/fzf-tab
+zinit ice wait lucid
+zinit light Tarrasch/zsh-bd
 
 # Add in snippets
 zinit snippet OMZL::git.zsh
@@ -60,8 +66,15 @@ zinit snippet OMZL::git.zsh
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions (Docker, Homeshick, etc.)
+fpath=("$HOME/.docker/completions" $fpath)
+
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 zinit cdreplay -q
 
@@ -115,6 +128,9 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
+# Directory navigation
+setopt AUTO_CD             # Type a directory path to cd into it
+
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -138,3 +154,50 @@ if type zoxide &>/dev/null; then
     alias z=__zoxide_z
     alias zi=__zoxide_zi
 fi
+
+# fnm (Fast Node Manager)
+if type fnm &>/dev/null; then
+  eval "$(fnm env --shell zsh)"
+
+  # Smart auto-switch: only calls fnm when version file changes
+  _fnm_version_file=""
+  _fnm_auto_switch() {
+    local dir="$PWD" found=""
+    while [[ "$dir" != "" ]]; do
+      if [[ -f "$dir/.nvmrc" ]]; then
+        found="$dir/.nvmrc"; break
+      elif [[ -f "$dir/.node-version" ]]; then
+        found="$dir/.node-version"; break
+      fi
+      dir="${dir%/*}"
+    done
+    if [[ "$found" != "$_fnm_version_file" ]]; then
+      _fnm_version_file="$found"
+      if [[ -n "$found" ]]; then
+        fnm use --silent-if-unchanged
+      else
+        fnm use default --silent-if-unchanged
+      fi
+    fi
+  }
+
+  autoload -U add-zsh-hook
+  add-zsh-hook chpwd _fnm_auto_switch
+  _fnm_auto_switch
+fi
+
+# Bun completions (lazy-loaded on first <tab>)
+if [ -s "$HOME/.bun/_bun" ]; then
+  _bun_completion_loader() {
+    unfunction _bun_completion_loader
+    source "$HOME/.bun/_bun"
+  }
+  compdef _bun_completion_loader bun bunx
+fi
+
+# Local binaries
+[[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+
+# Tool-injected PATH additions
+# These are added/modified by tool installers (Herd, Bun, Vite+, etc.)
+

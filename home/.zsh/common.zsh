@@ -49,6 +49,11 @@ alias pbc=pbcopy
 alias pbp=pbpaste
 alias y=yazi
 
+# Git log formats (from Prezto)
+_git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(reset)%n%C(bold)Author:%C(reset) %C(bold blue)%an <%ae>%C(reset)%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+_git_log_oneline_format='%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+_git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
+
 # GIT
 
 alias nah="git reset --hard && git clean -df"
@@ -116,10 +121,6 @@ alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv -i'
 alias rm='nocorrect rm -i'
 alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
 
 # Secrets (API keys, tokens) are loaded from ~/.secrets
 # See ~/.secrets.example for the template.

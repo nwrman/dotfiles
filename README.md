@@ -89,7 +89,7 @@ dotfiles/
 │   ├── import-prefs.sh         # Import saved app prefs on new machine
 │   ├── macos-defaults.sh       # macOS system preferences
 │   └── setup-extras.sh         # Touch ID, Spicetify, etc.
-└── install.sh                  # Bootstrap entry point (Prezto + Homeshick + bootstrap)
+└── install.sh                  # Bootstrap entry point (Homeshick + bootstrap)
 ```
 
 ## Machine roles
@@ -187,10 +187,117 @@ bash scripts/macos-defaults.sh
 
 ## Shell setup
 
-- **Framework:** [Zinit](https://github.com/zdharma-continuum/zinit) (plugin manager)
-- **Prompt:** [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (Pure style)
-- **Plugins:** syntax-highlighting, completions, autosuggestions, fzf-tab
-- **Integrations:** fzf, zoxide, Docker completions
+### Plugin stack
+
+- **[Zinit](https://github.com/zdharma-continuum/zinit)** -- plugin manager with turbo mode (plugins load *after* the prompt renders, so startup feels instant)
+- **[Powerlevel10k](https://github.com/romkatv/powerlevel10k)** -- prompt theme in Pure style with Snazzy colors. Uses instant prompt for near-zero latency and transient prompt (previous commands shrink to a minimal `>`)
+- **[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)** -- colors commands as you type (green = valid, red = error)
+- **[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)** -- suggests commands from history as you type (accept with right arrow)
+- **[zsh-completions](https://github.com/zsh-users/zsh-completions)** -- additional completion definitions
+- **[fzf-tab](https://github.com/Aloxaf/fzf-tab)** -- replaces the default tab completion menu with fzf fuzzy matching and directory previews
+
+### Navigation
+
+- **AUTO_CD** -- type a directory name to `cd` into it (e.g., `projects` instead of `cd projects`)
+- **[zoxide](https://github.com/ajeetdsouza/zoxide)** replaces `cd` -- learns your frequently visited directories. `cd foo` jumps to the best match, `zi` opens an interactive picker
+- **[bd](https://github.com/Tarrasch/zsh-bd)** -- jump back to a parent directory by name (e.g., `bd src` from `~/projects/app/src/lib/utils` jumps to `~/projects/app/src`)
+- **`..`**, **`...`**, **`....`** -- quick upward navigation (`..` = `cd ..`, `...` = `cd ../..`, etc.)
+
+### Node version management
+
+- **[fnm](https://github.com/Schniz/fnm)** automatically switches Node versions when you enter a directory containing `.nvmrc` or `.node-version`
+- Smart caching optimization: only calls `fnm use` when the version file *actually changes*, not on every `cd`
+
+### Completions & fuzzy finding
+
+- **fzf-tab** -- tab completion uses fzf with directory previews for `cd` and `zoxide`
+- **[fzf](https://github.com/junegunn/fzf)** -- `Ctrl+R` (search history), `Ctrl+T` (find files), `Alt+C` (jump to directory)
+- **Bun completions** -- lazy-loaded on first `<tab>` for zero startup cost
+- **Docker completions** -- loaded via `fpath`
+- **Case-insensitive completion** -- `doc<tab>` matches `Documents`
+- **compinit caching** -- completion dump only rebuilds every 24 hours
+
+### Keybindings
+
+Emacs mode (`bindkey -e`) with bindings for multiple terminal emulators:
+
+| Key | Action |
+|-----|--------|
+| `Home` / `End` | Beginning / end of line |
+| `Ctrl+Right` / `Ctrl+Left` | Jump forward / back one word |
+| `Alt+Right` / `Alt+Left` | Jump forward / back one word (alternative) |
+| `Ctrl+K` | Kill from cursor to end of line |
+| `Ctrl+U` | Kill from cursor to beginning of line |
+| `Ctrl+W` | Kill previous word |
+| `Page Up` / `Page Down` | Search history backward / forward |
+
+### History
+
+10,000 entries in `~/.zsh_history`, shared across all terminal sessions. Duplicates are erased, and commands starting with a space are excluded (useful for sensitive commands).
+
+### Key aliases
+
+Not exhaustive -- see `home/.zsh/common.zsh` for the full list.
+
+**Git:**
+
+| Alias | Command | Note |
+|-------|---------|------|
+| `g` | `git` | |
+| `gp` | `git pull --rebase --autostash` | Keeps history clean |
+| `nah` | `git reset --hard && git clean -df` | Discard everything |
+| `gu` | `git reset --soft HEAD~1` | Undo last commit (keep changes) |
+| `gst` | `git status` | |
+| `gc` | `git commit --verbose` | |
+| `gpu` | `git push` | |
+| `gsw` | `git switch -` | Switch to previous branch |
+| `gl` / `glo` / `glg` | Log (medium / oneline / graph) | |
+
+**PHP / Laravel:**
+
+| Alias | Command |
+|-------|---------|
+| `a` | `php artisan` |
+| `t` | `./vendor/bin/pest` |
+| `c` | `composer` |
+| `cl` | `composer lint` |
+
+**Node / pnpm:**
+
+| Alias | Command |
+|-------|---------|
+| `d` | `npm run dev` |
+| `nr` | `npm run` |
+| `pn` | `pnpm` |
+| `pd` | `pnpm run dev` |
+
+**Docker:**
+
+| Alias | Command |
+|-------|---------|
+| `dcu` | `docker-compose up -d` |
+| `dcs` | `docker-compose stop` |
+| `dcr` | Stop + up (restart) |
+
+**Files & directories:**
+
+| Alias | Command |
+|-------|---------|
+| `y` | `yazi` (terminal file manager) |
+| `l` | `ls -1A` |
+| `ll` | `ls -lh` |
+| `la` | `ll -A` |
+
+**Safety defaults:**
+
+`cp`, `mv`, and `rm` are aliased with `-i` (interactive confirmation). `mkdir` always uses `-p`.
+
+### Other integrations
+
+- **Sudo plugin** -- double-tap `ESC` to prefix the current or previous command with `sudo`
+- **command-not-found** -- suggests which package to install when a command isn't found
+
+See `home/.zsh/common.zsh` for the full alias list and `home/.zshrc` for all shell configuration.
 
 ## License
 

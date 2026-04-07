@@ -98,3 +98,5 @@ killall SystemUIServer 2>/dev/null || true
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
 
 echo "==> macOS defaults applied."
+echo
+echo "    NOTE: Keyboard layouts and system shortcuts require a logout/login to take effect."
