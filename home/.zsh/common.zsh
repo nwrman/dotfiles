@@ -32,7 +32,7 @@ alias ct="composer test"
 alias cut="composer test:unit"
 alias ctt="composer test:types"
 alias cl="composer lint"
-alias a="php artisan"
+alias a="./artisan"
 alias dcu="docker-compose up -d"
 alias dcs="docker-compose stop"
 alias dcr="dcs && dcu"
@@ -121,6 +121,10 @@ alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv -i'
 alias rm='nocorrect rm -i'
 alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
+
+# Misc
+alias oc=opencode
+alias cc=cc
 
 # Secrets (API keys, tokens) are loaded from ~/.secrets
 # See ~/.secrets.example for the template.

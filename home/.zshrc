@@ -5,6 +5,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# XDG base directories
+export XDG_CONFIG_HOME="$HOME/.config"
+
 if [[ -f "/opt/homebrew/bin/brew" ]] then
   # If you're using macOS, you'll want this enabled
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -52,8 +55,6 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit ice wait lucid
 zinit light zsh-users/zsh-syntax-highlighting
 zinit ice wait lucid
-zinit light zsh-users/zsh-completions
-zinit ice wait lucid
 zinit light zsh-users/zsh-autosuggestions
 zinit ice wait lucid
 zinit light Aloxaf/fzf-tab
@@ -66,8 +67,7 @@ zinit snippet OMZL::git.zsh
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 
-# Load completions (Docker, Homeshick, etc.)
-fpath=("$HOME/.docker/completions" $fpath)
+# Load completions
 
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
@@ -77,6 +77,20 @@ else
 fi
 
 zinit cdreplay -q
+
+# Carapace — multi-shell completion engine (400+ commands)
+# Bridges fall back to native zsh/fish/bash completions for uncovered tools
+if type carapace &>/dev/null; then
+  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+  zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+  source <(carapace _carapace)
+fi
+
+# Artisan — dynamic completions via Symfony Console (discovers all project commands)
+if [[ -f "$XDG_CONFIG_HOME/carapace/bridge/zsh/artisan.zsh" ]]; then
+  source "$XDG_CONFIG_HOME/carapace/bridge/zsh/artisan.zsh"
+  compdef _sf_artisan a
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -184,15 +198,6 @@ if type fnm &>/dev/null; then
   autoload -U add-zsh-hook
   add-zsh-hook chpwd _fnm_auto_switch
   _fnm_auto_switch
-fi
-
-# Bun completions (lazy-loaded on first <tab>)
-if [ -s "$HOME/.bun/_bun" ]; then
-  _bun_completion_loader() {
-    unfunction _bun_completion_loader
-    source "$HOME/.bun/_bun"
-  }
-  compdef _bun_completion_loader bun bunx
 fi
 
 # Local binaries
