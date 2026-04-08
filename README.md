@@ -61,6 +61,7 @@ dotfiles/
 ├── Brewfile.work               # Work-only packages (installed when role=work)
 ├── home/                       # Symlinked to $HOME by Homeshick
 │   ├── .config/
+│   │   ├── atuin/config.toml    # Atuin shell history config
 │   │   ├── ghostty/config      # Ghostty terminal config
 │   │   ├── iterm2-prefs/       # iTerm2 prefs (iTerm2 reads directly from here)
 │   │   ├── nix/                # Legacy nix-darwin config (untouched)
@@ -193,7 +194,6 @@ bash scripts/macos-defaults.sh
 - **[Powerlevel10k](https://github.com/romkatv/powerlevel10k)** -- prompt theme in Pure style with Snazzy colors. Uses instant prompt for near-zero latency and transient prompt (previous commands shrink to a minimal `>`)
 - **[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)** -- colors commands as you type (green = valid, red = error)
 - **[zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)** -- suggests commands from history as you type (accept with right arrow)
-- **[zsh-completions](https://github.com/zsh-users/zsh-completions)** -- additional completion definitions
 - **[fzf-tab](https://github.com/Aloxaf/fzf-tab)** -- replaces the default tab completion menu with fzf fuzzy matching and directory previews
 
 ### Navigation
@@ -210,10 +210,10 @@ bash scripts/macos-defaults.sh
 
 ### Completions & fuzzy finding
 
-- **fzf-tab** -- tab completion uses fzf with directory previews for `cd` and `zoxide`
-- **[fzf](https://github.com/junegunn/fzf)** -- `Ctrl+R` (search history), `Ctrl+T` (find files), `Alt+C` (jump to directory)
-- **Bun completions** -- lazy-loaded on first `<tab>` for zero startup cost
-- **Docker completions** -- loaded via `fpath`
+- **[Carapace](https://carapace.sh)** -- multi-shell completion engine providing 669 completers from a single binary, replacing `zsh-completions`, Docker fpath, and Bun lazy-load hacks. Falls back to native zsh/fish/bash completions via `CARAPACE_BRIDGES` for uncovered tools
+- **Laravel Artisan** -- dynamic completions via Symfony Console's native zsh completion (`artisan _complete`). Discovers all project commands at runtime, including app-specific ones (e.g., `boost:update`, `deploy:*`). Works with the `a` alias
+- **fzf-tab** -- tab completion uses fzf with eza directory previews for `cd` and `zoxide`
+- **[fzf](https://github.com/junegunn/fzf)** -- `Ctrl+T` (find files), `Alt+C` (jump to directory)
 - **Case-insensitive completion** -- `doc<tab>` matches `Documents`
 - **compinit caching** -- completion dump only rebuilds every 24 hours
 
@@ -233,7 +233,11 @@ Emacs mode (`bindkey -e`) with bindings for multiple terminal emulators:
 
 ### History
 
-10,000 entries in `~/.zsh_history`, shared across all terminal sessions. Duplicates are erased, and commands starting with a space are excluded (useful for sensitive commands).
+- **[Atuin](https://atuin.sh)** -- replaces zsh's built-in history with a SQLite database. Stores command context (directory, exit code, duration, timestamp) and provides fuzzy search
+- **`Ctrl+R`** -- opens atuin's compact search UI with fuzzy filtering across all history
+- **Up arrow** -- prefix search (type `git` then Up = only git commands)
+- **`Tab`** in atuin search -- paste command to prompt for editing instead of executing
+- Zsh's built-in history is kept as fallback (10,000 entries in `~/.zsh_history`)
 
 ### Key aliases
 
@@ -257,7 +261,7 @@ Not exhaustive -- see `home/.zsh/common.zsh` for the full list.
 
 | Alias | Command |
 |-------|---------|
-| `a` | `php artisan` |
+| `a` | `./artisan` |
 | `t` | `./vendor/bin/pest` |
 | `c` | `composer` |
 | `cl` | `composer lint` |
@@ -284,9 +288,13 @@ Not exhaustive -- see `home/.zsh/common.zsh` for the full list.
 | Alias | Command |
 |-------|---------|
 | `y` | `yazi` (terminal file manager) |
-| `l` | `ls -1A` |
-| `ll` | `ls -lh` |
-| `la` | `ll -A` |
+| `ls` | `eza --group-directories-first` |
+| `l` | `eza -1a` |
+| `ll` | `eza -lh` |
+| `la` | `eza -la` |
+| `lt` | `eza -l --sort=modified` |
+| `tree` | `eza --tree` |
+| `cat` | `bat --paging=never` |
 
 **Safety defaults:**
 

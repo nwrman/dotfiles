@@ -96,21 +96,26 @@ alias gdiff='git diff --no-ext-diff'
 alias grs='git reset --soft'
 alias grh='git reset --hard'
 
-# ls
+# ls (eza)
 
-alias l='ls -1A'
-alias la='ll -A'
-alias lc='lt -c'
-alias lk='ll -Sr'
-alias ll='ls -lh'
-alias lm='la | "$PAGER"'
-alias ln='nocorrect ln -i'
-alias lni='nocorrect ln -i'
-alias locate='noglob locate'
-alias lr='ll -R'
-alias ls='ls -G'
-alias lt='ll -tr'
-alias lu='lt -u'
+if type eza &>/dev/null; then
+  alias ls='eza --group-directories-first'
+  alias l='eza -1a --group-directories-first'
+  alias la='eza -la --group-directories-first'
+  alias ll='eza -lh --group-directories-first'
+  alias lr='eza -lR --group-directories-first'
+  alias lt='eza -l --sort=modified'
+  alias lk='eza -l --sort=size --reverse'
+  alias tree='eza --tree'
+else
+  alias l='ls -1A'
+  alias la='ll -A'
+  alias ll='ls -lh'
+  alias lr='ll -R'
+  alias ls='ls -G'
+  alias lt='ll -tr'
+  alias lk='ll -Sr'
+fi
 
 # Better command defaults
 
@@ -121,6 +126,11 @@ alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv -i'
 alias rm='nocorrect rm -i'
 alias get='curl --continue-at - --location --progress-bar --remote-name --remote-time'
+
+# bat as default cat
+if type bat &>/dev/null; then
+  alias cat='bat --paging=never'
+fi
 
 # Misc
 alias oc=opencode

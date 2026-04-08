@@ -22,6 +22,7 @@ brew "neovim"
 brew "httpie"
 brew "fzf"
 brew "zoxide"
+brew "atuin"
 brew "mariadb", restart_service: false  # client only
 brew "ffmpegthumbnailer"
 brew "jq"

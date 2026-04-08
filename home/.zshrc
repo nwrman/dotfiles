@@ -133,14 +133,11 @@ bindkey '^[[6~' history-search-forward   # Page Down
 HISTSIZE=10000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
 
 # Directory navigation
 setopt AUTO_CD             # Type a directory path to cd into it
@@ -149,11 +146,10 @@ setopt AUTO_CD             # Type a directory path to cd into it
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always $realpath'
 
 # Aliases
-alias ls='ls --color'
 alias vim='nvim'
 alias c='clear'
 
@@ -167,6 +163,11 @@ if type zoxide &>/dev/null; then
     eval "$(zoxide init --cmd cd zsh)"
     alias z=__zoxide_z
     alias zi=__zoxide_zi
+fi
+
+# Atuin — enhanced shell history with context-aware fuzzy search
+if type atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
 fi
 
 # fnm (Fast Node Manager)
