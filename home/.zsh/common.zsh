@@ -56,7 +56,8 @@ _git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(
 
 # GIT
 
-alias nah="git reset --hard && git clean -df"
+alias nah='git reset --hard'
+alias 'nah!'='git reset --hard && git clean -df'
 
 alias g='git'
 
@@ -93,8 +94,19 @@ alias gRu='git remote update'
 
 alias gst='git status --ignore-submodules=dirty'
 alias gdiff='git diff --no-ext-diff'
+alias gd='git diff | diffnav'
+alias gds='git diff --staged | diffnav'
 alias grs='git reset --soft'
 alias grh='git reset --hard'
+alias lg=lazygit
+
+# GitHub PR review with diffnav
+pr-diff() {
+  gh pr diff "$@" | diffnav
+}
+
+# GitHub dashboard
+alias ghd='gh dash'
 
 # ls (eza)
 
@@ -134,7 +146,8 @@ fi
 
 # Misc
 alias oc=opencode
-alias occ=opencode -c
+alias occ='opencode -c'
+alias pic='pi -c'
 alias cc=claude
 alias yz=yazi
 

@@ -76,7 +76,19 @@ defaults:
                 width: 20
                 hidden: true
     refetchIntervalMinutes: 30
-keybindings: {}
+keybindings:
+    universal:
+        - key: g
+          name: lazygit
+          command: cd {{.RepoPath}} && lazygit
+    prs:
+        - key: e
+          name: open in zed
+          command: zed {{.RepoPath}}
+        - key: d
+          builtin: diff
+        - key: O
+          builtin: checkout
 repoPaths: {}
 theme:
     ui:
@@ -85,7 +97,7 @@ theme:
             showSeparator: true
             compact: false
 pager:
-    diff: ""
+    diff: "diffnav"
 confirmQuit: false
 showAuthorIcons: true
 smartFilteringAtLaunch: true

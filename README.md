@@ -256,6 +256,11 @@ Not exhaustive -- see `home/.zsh/common.zsh` for the full list.
 | `gc` | `git commit --verbose` | |
 | `gpu` | `git push` | |
 | `gsw` | `git switch -` | Switch to previous branch |
+| `gd` | `git diff \| diffnav` | Interactive diff with file tree |
+| `gds` | `git diff --staged \| diffnav` | Staged changes in diffnav |
+| `gdiff` | `git diff --no-ext-diff` | Plain diff (no pager) |
+| `pr-diff` | `gh pr diff \| diffnav` | Review PR diff in diffnav |
+| `ghd` | `gh dash` | GitHub dashboard (PRs, issues, notifications) |
 | `gl` / `glo` / `glg` | Log (medium / oneline / graph) | |
 
 **PHP / Laravel:**
@@ -349,12 +354,44 @@ Prefix is `Ctrl+B` (default). Keybindings below are pressed **after** the prefix
 | `prefix + I` | Install new TPM plugins |
 | `prefix + U` | Update plugins |
 
+#### Window switching (no prefix needed)
+
+These bindings work instantly without pressing the prefix key first:
+
+| Key | Action |
+|-----|--------|
+| `Alt+1` - `Alt+9` | Jump directly to window N |
+| `Alt+h` | Previous window |
+| `Alt+l` | Next window |
+| `Alt+Tab` | Toggle between last two windows |
+
+> **Note:** On macOS, your terminal must send Option as Meta/Esc+. In iTerm2: Preferences > Profiles > Keys > Left Option = `Esc+`. In Ghostty this is the default behavior.
+
 ### Settings
 
 - Mouse enabled, true-color support, no ESC delay
 - 10,000 line scrollback, auto-renumber windows on close
 
 See `home/.tmux.conf` for the full configuration.
+
+## GitHub Dashboard (gh-dash)
+
+[gh-dash](https://github.com/dlvhdr/gh-dash) provides a terminal UI for managing PRs, issues, and notifications across all your GitHub repos. Launch with `ghd`.
+
+### Diff pager
+
+PR diffs open in [diffnav](https://github.com/dlvhdr/diffnav) -- a file-tree diff viewer (press `d` on any PR).
+
+### Custom keybindings
+
+| Key | Context | Action |
+|-----|---------|--------|
+| `g` | Any view | Open lazygit in the repo |
+| `e` | PRs | Open repo in Zed |
+| `d` | PRs | View PR diff in diffnav |
+| `O` | PRs | Checkout PR branch locally |
+
+See `home/.config/gh-dash/config.yml` for the full configuration.
 
 ## License
 
