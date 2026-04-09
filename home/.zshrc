@@ -155,8 +155,10 @@ alias c='clear'
 
 # Shell integrations
 
-if type fzf &>/dev/null; then
-    eval "$(fzf --zsh)"
+# Television — context-aware smart autocomplete (Ctrl+T)
+# Also binds Ctrl+R, but atuin init below reclaims it for history search.
+if type tv &>/dev/null; then
+    eval "$(tv init zsh)"
 fi
 
 if type zoxide &>/dev/null; then

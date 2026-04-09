@@ -213,7 +213,8 @@ bash scripts/macos-defaults.sh
 - **[Carapace](https://carapace.sh)** -- multi-shell completion engine providing 669 completers from a single binary, replacing `zsh-completions`, Docker fpath, and Bun lazy-load hacks. Falls back to native zsh/fish/bash completions via `CARAPACE_BRIDGES` for uncovered tools
 - **Laravel Artisan** -- dynamic completions via Symfony Console's native zsh completion (`artisan _complete`). Discovers all project commands at runtime, including app-specific ones (e.g., `boost:update`, `deploy:*`). Works with the `a` alias
 - **fzf-tab** -- tab completion uses fzf with eza directory previews for `cd` and `zoxide`
-- **[fzf](https://github.com/junegunn/fzf)** -- `Ctrl+T` (find files), `Alt+C` (jump to directory)
+- **[Television](https://github.com/alexpasmantier/television)** -- context-aware smart autocomplete via `Ctrl+T`. Understands the current prompt: `git checkout` + Ctrl+T shows branches, `cd` + Ctrl+T shows directories, `cat` + Ctrl+T shows files
+- **[fzf](https://github.com/junegunn/fzf)** -- fuzzy matching backend for fzf-tab (no shell keybindings -- television and atuin handle those)
 - **Case-insensitive completion** -- `doc<tab>` matches `Documents`
 - **compinit caching** -- completion dump only rebuilds every 24 hours
 
@@ -306,6 +307,54 @@ Not exhaustive -- see `home/.zsh/common.zsh` for the full list.
 - **command-not-found** -- suggests which package to install when a command isn't found
 
 See `home/.zsh/common.zsh` for the full alias list and `home/.zshrc` for all shell configuration.
+
+## Tmux
+
+Managed with [TPM](https://github.com/tmux-plugins/tpm) (auto-installs on fresh machines). Theme is [Catppuccin Mocha](https://github.com/catppuccin/tmux) with rounded window tabs.
+
+### Plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| `tmux-sensible` | Universal sane defaults |
+| `tmux-yank` | System clipboard integration in copy mode |
+| `tmux-resurrect` | Save/restore sessions across reboots |
+| `tmux-continuum` | Auto-save sessions every 15 min + auto-restore on start |
+| `catppuccin/tmux` | Catppuccin Mocha theme with status modules |
+
+### Status bar (top)
+
+- **Left:** window tabs (rounded style, numbered from 1)
+- **Right:** current application, directory, session name
+- **SSH only:** user and hostname appear when connected remotely
+
+### Session management
+
+- **[sesh](https://github.com/joshmedeski/sesh)** -- smart tmux session manager, integrates with zoxide for directory discovery
+- **[television](https://github.com/alexpasmantier/television)** -- fuzzy finder used as the session picker UI (via custom `sesh` cable channel)
+- `prefix + T` opens a popup with television showing all sessions, zoxide directories, and config paths. `Ctrl+S` cycles sources, `Ctrl+D` kills a session, `Enter` connects
+- `prefix + L` switches to the last session (like `cd -` for tmux)
+- Closing a session auto-switches to the next one (`detach-on-destroy off`)
+
+### Key bindings
+
+Prefix is `Ctrl+B` (default). Keybindings below are pressed **after** the prefix. Capital letters mean `Shift` is held (e.g., `prefix + T` = `Ctrl+B` then `Shift+T`).
+
+| Key | Action |
+|-----|--------|
+| `prefix + T` | Session picker (sesh + television) |
+| `prefix + L` | Switch to last session |
+| `prefix + \|` | Split pane horizontally (in current path) |
+| `prefix + -` | Split pane vertically (in current path) |
+| `prefix + I` | Install new TPM plugins |
+| `prefix + U` | Update plugins |
+
+### Settings
+
+- Mouse enabled, true-color support, no ESC delay
+- 10,000 line scrollback, auto-renumber windows on close
+
+See `home/.tmux.conf` for the full configuration.
 
 ## License
 

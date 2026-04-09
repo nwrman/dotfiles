@@ -26,7 +26,7 @@ export PATH="./vendor/bin:./node_modules/bin:$PATH"
 
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-alias t="./vendor/bin/pest"
+alias t="sesh connect ."
 alias tb="./vendor/bin/pest --bail"
 alias ct="composer test"
 alias cut="composer test:unit"
@@ -134,7 +134,9 @@ fi
 
 # Misc
 alias oc=opencode
-alias cc=cc
+alias occ=opencode -c
+alias cc=claude
+alias yz=yazi
 
 # Secrets (API keys, tokens) are loaded from ~/.secrets
 # See ~/.secrets.example for the template.
