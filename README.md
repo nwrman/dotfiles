@@ -331,7 +331,7 @@ Managed with [TPM](https://github.com/tmux-plugins/tpm) (auto-installs on fresh 
 
 - **Left:** window tabs (rounded style, numbered from 1)
 - **Right:** current application, directory, session name
-- **SSH only:** user and hostname appear when connected remotely
+- **SSH only:** `user@hostname` appears when connected remotely
 
 ### Session management
 
