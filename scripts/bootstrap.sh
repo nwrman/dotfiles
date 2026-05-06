@@ -11,6 +11,13 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPTS_DIR="${DOTFILES_DIR}/scripts"
 
+# Ask for the administrator password upfront
+echo "==> Requesting administrative privileges..."
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until the script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 echo "========================================"
 echo "  Dotfiles Bootstrap"
 echo "  Repo: ${DOTFILES_DIR}"
