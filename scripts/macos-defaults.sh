@@ -112,6 +112,14 @@ defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
 sudo mdutil -a -i off 2>/dev/null || true
 
 # ==============================================================================
+# Accessibility
+# ==============================================================================
+# Disable Visual "Eye Candy" (Reduce motion and transparency) for better performance
+# Note: Sudo is required for universalaccess on this system
+sudo defaults write com.apple.universalaccess reduceMotion -bool true
+sudo defaults write com.apple.universalaccess reduceTransparency -bool true
+
+# ==============================================================================
 # Apply settings without requiring logout
 # ==============================================================================
 echo "==> Restarting affected services..."
