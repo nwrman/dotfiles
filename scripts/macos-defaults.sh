@@ -120,6 +120,22 @@ sudo defaults write com.apple.universalaccess reduceMotion -bool true
 sudo defaults write com.apple.universalaccess reduceTransparency -bool true
 
 # ==============================================================================
+# Touch Bar
+# ==============================================================================
+# Only apply if Touch Bar hardware is detected
+if ioreg -l | grep "Touch Bar" > /dev/null; then
+  echo "==> Configuring Touch Bar..."
+  # Touch Bar shows: Expanded Control Strip
+  defaults write com.apple.touchbar.agent PresentationModeGlobal -string fullControlStrip
+
+  # Press and hold fn key to: Show F1, F2, etc. Keys
+  defaults write com.apple.touchbar.agent PresentationModeFnModes -dict-add fullControlStrip functionKeys
+
+  # Show typing suggestions: OFF
+  defaults write NSGlobalDomain NSAutomaticTypingSuggestionEnabled -bool false
+fi
+
+# ==============================================================================
 # Apply settings without requiring logout
 # ==============================================================================
 echo "==> Restarting affected services..."
@@ -127,6 +143,8 @@ killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
 killall ControlCenter 2>/dev/null || true
+killall ControlStrip 2>/dev/null || true
+killall TouchBarServer 2>/dev/null || true
 
 # Activate system settings changes
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true
