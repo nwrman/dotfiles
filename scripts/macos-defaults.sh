@@ -6,6 +6,8 @@ set -euo pipefail
 
 echo "==> Applying macOS defaults..."
 
+[ "$EUID" -ne 0 ] && echo "Sudo is required to disable spotlight"
+
 # ==============================================================================
 # Dock
 # ==============================================================================
@@ -29,6 +31,8 @@ defaults write com.apple.dock wvous-br-modifier -int 0
 defaults write com.apple.finder ShowStatusBar -bool true
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder CreateDesktop -bool false
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"       # Search current folder
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"       # Column view
@@ -80,11 +84,32 @@ defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -stri
 defaults write com.apple.TextInputMenu visible -bool true
 
 # ==============================================================================
+# Control Center
+# ==============================================================================
+# Sound: Always show in menu bar
+defaults write com.apple.controlcenter "NSStatusItem Visible AudioVideoModule" -int 1
+defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -int 1
+defaults -currentHost write com.apple.controlcenter Sound -int 18
+
+# Now Playing: Always hide from menu bar
+defaults write com.apple.controlcenter "NSStatusItem Visible NowPlaying" -int 0
+defaults -currentHost write com.apple.controlcenter NowPlaying -int 8
+
+# ==============================================================================
 # Custom User Preferences — Locale, weekday, date format
 # ==============================================================================
 defaults write NSGlobalDomain AppleLocale -string "en_MX"
 defaults write NSGlobalDomain AppleFirstWeekday -dict gregorian -int 2     # Monday
 defaults write NSGlobalDomain AppleICUDateFormatStrings -dict 1 -string "y-MM-dd"
+
+# ==============================================================================
+# Spotlight
+# ==============================================================================
+# Hide menu bar icon
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+
+# Disable indexing on all mounted volumes
+sudo mdutil -a -i off 2>/dev/null || true
 
 # ==============================================================================
 # Apply settings without requiring logout
@@ -93,6 +118,7 @@ echo "==> Restarting affected services..."
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
+killall ControlCenter 2>/dev/null || true
 
 # Activate system settings changes
 /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null || true

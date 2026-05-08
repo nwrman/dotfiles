@@ -5,6 +5,7 @@ window-height = 55
 scrollback-limit = 100000
 
 font-family = MesloLGS NF
+font-thicken = true
 font-size = 16
 adjust-cell-height = 4%
 bold-is-bright = true
