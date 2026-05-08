@@ -133,6 +133,15 @@ if ioreg -l | grep "Touch Bar" > /dev/null; then
 
   # Show typing suggestions: OFF
   defaults write NSGlobalDomain NSAutomaticTypingSuggestionEnabled -bool false
+
+  # Customize Expanded Control Strip items
+  defaults write com.apple.controlstrip FullCustomized -array \
+    "com.apple.system.group.brightness" \
+    "com.apple.system.group.keyboard-brightness" \
+    "com.apple.system.mission-control" \
+    "com.apple.system.launchpad" \
+    "com.apple.system.group.media" \
+    "com.apple.system.group.volume"
 fi
 
 # ==============================================================================
