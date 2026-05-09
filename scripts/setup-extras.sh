@@ -27,3 +27,21 @@ else
   defaults write ~/Library/Preferences/com.apple.security.authorization.plist ignoreArd -bool TRUE
   echo "    Done."
 fi
+
+# ==============================================================================
+# SSH Keychain
+# ==============================================================================
+if [[ ! -d "$HOME/.ssh" ]]; then
+    echo "==> Creating ~/.ssh directory..."
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+fi
+
+if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
+    echo "==> Adding SSH key to macOS Keychain..."
+    ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" 2>/dev/null || true
+else
+    echo "⚠️  ~/.ssh/id_ed25519 not found. Skipping SSH key setup."
+    echo "    Copy your private key from another machine, then run:"
+    echo "    ssh-add --apple-use-keychain ~/.ssh/id_ed25519"
+fi
