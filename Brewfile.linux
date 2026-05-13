@@ -5,7 +5,6 @@
 
 # Taps
 tap "dlvhdr/formulae"
-tap "stripe/stripe-cli"
 
 # Portable CLI tools (modern Rust/Go binaries, more current than apt)
 brew "atuin"
@@ -45,4 +44,3 @@ brew "zoxide"
 
 # Tapped formulae (Linux bottles available)
 brew "dlvhdr/formulae/diffnav"
-brew "stripe/stripe-cli/stripe"
