@@ -1,13 +1,21 @@
 # dotfiles
 
-Portable macOS configuration managed with [Homeshick](https://github.com/andsens/homeshick), [Homebrew](https://brew.sh), and shell scripts. Works across Intel and Apple Silicon Macs with support for machine-specific configuration (work vs. personal).
+Cross-platform shell configuration managed with [Homeshick](https://github.com/andsens/homeshick), [Homebrew](https://brew.sh), and shell scripts. Supports:
+
+- **macOS** (Intel and Apple Silicon) — Homebrew + casks + MAS apps + macOS defaults + Touch ID
+- **WSL2 Ubuntu** — apt prereqs + Linuxbrew CLI tools + WSL-aware shims (clipboard, `open`)
+- **Bare Ubuntu** (e.g. DigitalOcean droplet) — same Linux flow; runs cleanly as root, no display required
+
+Machine-specific configuration (work vs. personal) is supported on all three.
 
 ## Quick start
 
 ### New machine (from scratch)
 
+Same one-liner on every supported platform:
+
 ```bash
-curl -o- https://raw.githubusercontent.com/nwrman/dotfiles/master/install.sh | zsh
+curl -fsSL https://raw.githubusercontent.com/nwrman/dotfiles/master/install.sh | bash
 ```
 
 Or manually:
@@ -42,28 +50,49 @@ brew bundle --file=~/.homesick/repos/dotfiles/Brewfile
 
 ## What bootstrap does
 
-The `scripts/bootstrap.sh` script is idempotent (safe to re-run) and performs these steps:
+`scripts/bootstrap.sh` is idempotent (safe to re-run). It handles the shared steps and dispatches to an OS-specific script:
 
-1. **Machine role** -- prompts for `personal` or `work`, saved to `~/.machine-role`
-2. **Homebrew** -- installs Homebrew if missing, runs `brew update`
-3. **Packages** -- installs everything from `Brewfile` (and `Brewfile.work` if work machine)
-4. **Dotfiles** -- installs Homeshick if missing, runs `homeshick link`
-5. **macOS defaults** -- applies Dock, Finder, trackpad, keyboard, and other system preferences
-6. **Extras** -- enables Touch ID for sudo, configures Spicetify (Spotify theming)
-7. **App preferences** -- imports saved preferences for AltTab, Bartender, Shottr, KeyClu, Homerow, and configures iTerm2
-8. **Reminders** -- prompts to create `~/.secrets` if missing
+**Shared (all platforms):**
+
+1. **Machine role** — prompts for `personal` or `work`, saved to `~/.machine-role`
+2. **Homeshick** — clones if missing, runs `homeshick link dotfiles`
+3. **OS dispatch** — invokes `bootstrap-darwin.sh` or `bootstrap-linux.sh`
+4. **Reminders** — prompts to create `~/.secrets` if missing
+
+**macOS (`scripts/bootstrap-darwin.sh`):**
+
+- Installs Homebrew if missing; `brew update`
+- `brew bundle` against `Brewfile` (and `Brewfile.work` on work machines)
+- Applies `macos-defaults.sh` (Dock, Finder, trackpad, keyboard, …)
+- Enables Touch ID for sudo, configures Spicetify
+- Imports app preferences for AltTab, Bartender, Shottr, KeyClu, Homerow, iTerm2
+
+**Linux — WSL2 and bare Ubuntu (`scripts/bootstrap-linux.sh`):**
+
+- Installs apt prereqs (`build-essential`, `curl`, `git`, `zsh`, …) via `linux-apt-packages.sh`
+- On WSL2 also installs `wslu` (for `wslview`) and `xclip`
+- Installs Linuxbrew non-interactively
+- `brew bundle` against `Brewfile.linux` (and `Brewfile.work.linux` on work machines)
+- Sets `zsh` as the login shell
+
+**Skipped on Linux:** macOS-only steps — Touch ID, MAS apps, casks, Karabiner/iTerm2/Raycast/Bartender, `macos-defaults.sh`. The `home/.config/iterm2-prefs/`, `home/.config/karabiner/`, and `home/.config/nix/` directories are still symlinked into `$HOME` but are inert since the apps don't exist.
+
+> **Note for small droplets:** Linuxbrew may compile some formulae from source on first run, which is slow on a 1GB droplet. Recommend ≥2GB RAM for the initial bootstrap.
 
 ## Repository structure
 
 ```
 dotfiles/
-├── Brewfile                    # Shared Homebrew packages, casks, fonts, MAS apps
-├── Brewfile.work               # Work-only packages (installed when role=work)
+├── Brewfile                    # macOS: shared Homebrew packages, casks, fonts, MAS apps
+├── Brewfile.work               # macOS: work-only packages (role=work)
+├── Brewfile.linux              # Linux: CLI subset for Linuxbrew (WSL2 + droplet)
+├── Brewfile.work.linux         # Linux: work-only CLI tools
 ├── home/                       # Symlinked to $HOME by Homeshick
 │   ├── .config/
 │   │   ├── atuin/config.toml    # Atuin shell history config
 │   │   ├── ghostty/config      # Ghostty terminal config
-│   │   ├── iterm2-prefs/       # iTerm2 prefs (iTerm2 reads directly from here)
+│   │   ├── iterm2-prefs/       # iTerm2 prefs (macOS only; inert on Linux)
+│   │   ├── karabiner/          # macOS keyboard remapper (inert on Linux)
 │   │   ├── nix/                # Legacy nix-darwin config (untouched)
 │   │   ├── sublime-text-3/     # Sublime Text settings
 │   │   └── zed/settings.json   # Zed editor settings
@@ -74,10 +103,12 @@ dotfiles/
 │   ├── .tmux.conf
 │   ├── .zsh/
 │   │   ├── common.zsh         # Shared aliases, exports, PATH
+│   │   ├── darwin.zsh         # macOS-only (brew shellenv, Sublime, SmartGit, pbcopy)
+│   │   ├── linux.zsh          # Linux-only (Linuxbrew, xdg/wsl shims, clipboard)
 │   │   └── work.zsh           # Work-only config (sourced conditionally)
 │   ├── .zshrc                 # Main shell config (Zinit, plugins, keybindings)
 │   └── ...
-├── prefs/                      # Exported app preferences (not symlinked)
+├── prefs/                      # Exported macOS app preferences (not symlinked)
 │   ├── alttab.plist
 │   ├── bartender.plist
 │   ├── homerow.plist
@@ -85,12 +116,15 @@ dotfiles/
 │   ├── raycast.rayconfig
 │   └── shottr.plist
 ├── scripts/
-│   ├── bootstrap.sh            # Full machine setup (idempotent)
-│   ├── export-prefs.sh         # Export current app prefs to prefs/
-│   ├── import-prefs.sh         # Import saved app prefs on new machine
+│   ├── bootstrap.sh            # Shared dispatcher (role prompt, homeshick, OS branch)
+│   ├── bootstrap-darwin.sh     # macOS: Homebrew, brew bundle, defaults, extras, prefs
+│   ├── bootstrap-linux.sh      # Linux: apt prereqs, Linuxbrew, brew bundle, chsh zsh
+│   ├── linux-apt-packages.sh   # Linux: idempotent apt prereqs (+ wslu/xclip on WSL2)
+│   ├── export-prefs.sh         # macOS: export current app prefs to prefs/
+│   ├── import-prefs.sh         # macOS: import saved app prefs on new machine
 │   ├── macos-defaults.sh       # macOS system preferences
-│   └── setup-extras.sh         # Touch ID, Spicetify, etc.
-└── install.sh                  # Bootstrap entry point (Homeshick + bootstrap)
+│   └── setup-extras.sh         # macOS: Touch ID, Spicetify, etc.
+└── install.sh                  # Bootstrap entry point (curl | bash)
 ```
 
 ## Machine roles

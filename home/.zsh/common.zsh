@@ -1,13 +1,3 @@
-# Subl
-if [[ -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
-  export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin"
-fi
-
-# SmartGit
-if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
-  alias sg="/Applications/SmartGit.app/Contents/MacOS/SmartGit --open . &"
-fi
-
 # Composer
 if [[ -s "~/.composer/vendor/bin" ]]; then
   export PATH=$PATH:~/.composer/vendor/bin
@@ -44,8 +34,6 @@ alias pn="pnpm"
 alias pnx="pnpm --dlx"
 alias pd="pnpm run dev"
 alias c="composer"
-alias pbc=pbcopy
-alias pbp=pbpaste
 alias y=yazi
 
 # Git log formats (from Prezto)

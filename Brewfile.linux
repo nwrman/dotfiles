@@ -1,0 +1,48 @@
+# Brewfile.linux — CLI tools installed via Linuxbrew on WSL2 / bare Ubuntu.
+# Pairs with apt-installed system packages in scripts/linux-apt-packages.sh.
+# No casks, no MAS, no Mac-only formulae. Usage:
+#   brew bundle --file=Brewfile.linux
+
+# Taps
+tap "dlvhdr/formulae"
+tap "stripe/stripe-cli"
+
+# Portable CLI tools (modern Rust/Go binaries, more current than apt)
+brew "atuin"
+brew "bat"
+brew "carapace"
+brew "dua-cli"
+brew "dust"
+brew "eza"
+brew "fd"
+brew "ffmpeg"
+brew "ffmpegthumbnailer"
+brew "fselect"
+brew "fzf"
+brew "gemini-cli"
+brew "gh"
+brew "git-delta"
+brew "googleworkspace-cli"
+brew "httpie"
+brew "imagemagick"
+brew "jq"
+brew "kondo"
+brew "lazygit"
+brew "mailpit"
+brew "mprocs"
+brew "ncdu"
+brew "neovim"
+brew "p7zip"
+brew "poppler"
+brew "ripgrep"
+brew "sesh"
+brew "television"
+brew "tmux"
+brew "uv"
+brew "vim"
+brew "yazi"
+brew "zoxide"
+
+# Tapped formulae (Linux bottles available)
+brew "dlvhdr/formulae/diffnav"
+brew "stripe/stripe-cli/stripe"

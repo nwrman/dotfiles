@@ -8,10 +8,11 @@ fi
 # XDG base directories
 export XDG_CONFIG_HOME="$HOME/.config"
 
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  # If you're using macOS, you'll want this enabled
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+# OS-specific config (brew shellenv, OS-only aliases/paths)
+case "$(uname -s)" in
+  Darwin) [[ -f "$HOME/.zsh/darwin.zsh" ]] && source "$HOME/.zsh/darwin.zsh" ;;
+  Linux)  [[ -f "$HOME/.zsh/linux.zsh"  ]] && source "$HOME/.zsh/linux.zsh"  ;;
+esac
 
 # Source Homeshick
 if [[ -s "$HOME/.homesick/repos/homeshick/homeshick.sh" ]]; then
@@ -19,11 +20,12 @@ if [[ -s "$HOME/.homesick/repos/homeshick/homeshick.sh" ]]; then
   fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fi
 
-# Source local .zsh files (excluding machine-role-specific files)
+# Source local .zsh files (excluding machine-role-specific and OS-specific files)
 if [[ -d $HOME/.zsh ]]; then
   for file in $HOME/.zsh/*; do
-    # Skip work.zsh — it's sourced conditionally below
-    [[ "$(basename "$file")" == "work.zsh" ]] && continue
+    case "$(basename "$file")" in
+      work.zsh|darwin.zsh|linux.zsh) continue ;;
+    esac
     source "$file"
   done
 fi

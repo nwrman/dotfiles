@@ -1,0 +1,7 @@
+# Brewfile.work.linux — work-only CLI tools for WSL2 / bare Ubuntu.
+# Only installed when ~/.machine-role contains "work".
+
+brew "awscli"
+brew "azure-cli"
+brew "caddy"
+brew "go"

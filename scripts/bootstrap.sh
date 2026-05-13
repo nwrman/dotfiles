@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bootstrap.sh — Idempotent setup for a new (or existing) Mac
+# bootstrap.sh — Idempotent setup dispatcher for macOS, WSL2 Ubuntu, and bare Ubuntu.
 # Safe to re-run at any time. Skips steps that are already done.
 #
 # Usage:
@@ -10,17 +10,12 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPTS_DIR="${DOTFILES_DIR}/scripts"
-
-# Ask for the administrator password upfront
-echo "==> Requesting administrative privileges..."
-sudo -v
-
-# Keep-alive: update existing `sudo` time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+export DOTFILES_DIR SCRIPTS_DIR
 
 echo "========================================"
 echo "  Dotfiles Bootstrap"
 echo "  Repo: ${DOTFILES_DIR}"
+echo "  OS:   $(uname -s)"
 echo "========================================"
 echo
 
@@ -33,7 +28,6 @@ if [[ -f "$ROLE_FILE" ]]; then
   ROLE="$(cat "$ROLE_FILE")"
   echo "==> Machine role: ${ROLE} (from ${ROLE_FILE})"
 elif [[ -n "${1:-}" ]]; then
-  # Accept role as CLI argument (for CI / fully headless)
   case "$1" in
     personal|work) ROLE="$1" ;;
     *)
@@ -44,7 +38,6 @@ elif [[ -n "${1:-}" ]]; then
   echo "$ROLE" > "$ROLE_FILE"
   echo "==> Machine role: ${ROLE} (set via argument, saved to ${ROLE_FILE})"
 else
-  # Prompt via /dev/tty — works even when stdin is piped (curl | bash, SSH pipe)
   echo "==> No machine role found."
   echo "    What role is this machine?"
   echo "    1) personal"
@@ -61,49 +54,11 @@ else
   echo "$ROLE" > "$ROLE_FILE"
   echo "    Saved '${ROLE}' to ${ROLE_FILE}"
 fi
-
+export ROLE
 echo
 
 # ==============================================================================
-# Step 2: Install Homebrew (if missing)
-# ==============================================================================
-if command -v brew &>/dev/null; then
-  echo "==> Homebrew: already installed."
-else
-  echo "==> Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-  # Add brew to PATH for the rest of this script
-  if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [[ -f "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
-fi
-
-echo "==> Updating Homebrew..."
-brew update
-
-echo
-
-# ==============================================================================
-# Step 3: Install packages from Brewfile
-# ==============================================================================
-# Accept Microsoft EULA for msodbcsql18 (ODBC driver)
-export HOMEBREW_ACCEPT_EULA=Y
-
-echo "==> Installing shared packages from Brewfile..."
-brew bundle --verbose --file="${DOTFILES_DIR}/Brewfile"
-
-if [[ "$ROLE" == "work" && -f "${DOTFILES_DIR}/Brewfile.work" ]]; then
-  echo "==> Installing work-only packages from Brewfile.work..."
-  brew bundle --verbose --file="${DOTFILES_DIR}/Brewfile.work"
-fi
-
-echo
-
-# ==============================================================================
-# Step 4: Install Homeshick (if missing) and link dotfiles
+# Step 2: Homeshick clone + link (shared; brewless prereqs)
 # ==============================================================================
 HOMESHICK_DIR="$HOME/.homesick/repos/homeshick"
 
@@ -114,35 +69,31 @@ else
   git clone https://github.com/andsens/homeshick.git "$HOMESHICK_DIR"
 fi
 
+# shellcheck disable=SC1091
 source "${HOMESHICK_DIR}/homeshick.sh"
 echo "==> Linking dotfiles..."
 yes | homeshick link dotfiles || true
-
 echo
 
 # ==============================================================================
-# Step 5: Apply macOS defaults
+# Step 3: Dispatch to OS-specific bootstrap
 # ==============================================================================
-bash "${SCRIPTS_DIR}/macos-defaults.sh"
-
+case "$(uname -s)" in
+  Darwin)
+    bash "${SCRIPTS_DIR}/bootstrap-darwin.sh"
+    ;;
+  Linux)
+    bash "${SCRIPTS_DIR}/bootstrap-linux.sh"
+    ;;
+  *)
+    echo "ERROR: Unsupported OS: $(uname -s)"
+    exit 1
+    ;;
+esac
 echo
 
 # ==============================================================================
-# Step 6: Setup extras (Touch ID, Spicetify, etc.)
-# ==============================================================================
-bash "${SCRIPTS_DIR}/setup-extras.sh"
-
-echo
-
-# ==============================================================================
-# Step 7: Import app preferences
-# ==============================================================================
-bash "${SCRIPTS_DIR}/import-prefs.sh"
-
-echo
-
-# ==============================================================================
-# Step 8: Reminders
+# Step 4: Reminders
 # ==============================================================================
 echo "========================================"
 echo "  Bootstrap complete!"
