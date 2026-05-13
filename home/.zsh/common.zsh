@@ -31,7 +31,6 @@ alias tb="./vendor/bin/pest --bail"
 alias ct="composer test"
 alias cut="composer test:unit"
 alias ctt="composer test:types"
-alias cl="composer lint"
 alias a="./artisan"
 alias dcu="docker-compose up -d"
 alias dcs="docker-compose stop"
@@ -148,7 +147,13 @@ fi
 alias oc=opencode
 alias occ='opencode -c'
 alias pic='pi -c'
-alias cc=claude
+
+_claude_cmd="claude --allow-dangerously-skip-permissions"
+
+alias cl="$_claude_cmd"
+alias cc="$_claude_cmd -c" # Continue most recent conversation in current directory
+alias cr="$_claude_cmd -r" # Resume a previous conversation
+
 alias yz=yazi
 
 # Secrets (API keys, tokens) are loaded from ~/.secrets

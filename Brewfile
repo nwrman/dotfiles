@@ -50,6 +50,7 @@ brew "uv"
 brew "dlvhdr/formulae/diffnav"
 brew "microsoft/mssql-release/msodbcsql18"
 brew "stripe/stripe-cli/stripe"
+brew "googleworkspace-cli"
 
 # Casks — GUI apps
 cask "affinity"
@@ -83,6 +84,7 @@ cask "xnviewmp"
 cask "yaak"
 cask "zed"
 brew "sqlcmd"
+brew "markedit"
 
 # Fonts
 cask "font-meslo-lg-nerd-font"
