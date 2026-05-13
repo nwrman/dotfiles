@@ -27,13 +27,13 @@ fi
 # shellcheck disable=SC1091
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-# Clone (or update) the dotfiles castle
+# Clone (or update) the dotfiles castle (--batch avoids SIGPIPE from `yes |`)
 if [[ ! -e "$HOME/.homesick/repos/dotfiles" ]]; then
-  yes | homeshick clone nwrman/dotfiles
+  homeshick --batch clone nwrman/dotfiles
 else
   homeshick pull dotfiles
 fi
-yes | homeshick link dotfiles || true
+homeshick --batch --force link dotfiles
 
 # Run bootstrap (bash, not zsh — zsh may not be the login shell yet)
 DOTFILES_DIR="$HOME/.homesick/repos/dotfiles"

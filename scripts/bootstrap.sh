@@ -72,7 +72,7 @@ fi
 # shellcheck disable=SC1091
 source "${HOMESHICK_DIR}/homeshick.sh"
 echo "==> Linking dotfiles..."
-yes | homeshick link dotfiles || true
+homeshick --batch --force link dotfiles
 echo
 
 # ==============================================================================
