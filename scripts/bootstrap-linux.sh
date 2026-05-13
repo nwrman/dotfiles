@@ -36,20 +36,23 @@ if [[ "$ROLE" == "work" && -f "${DOTFILES_DIR}/Brewfile.work.linux" ]]; then
 fi
 
 # ---- 4. Set zsh as login shell ----
+if [[ "$(id -u)" -eq 0 ]]; then SUDO=""; else SUDO="sudo"; fi
 ZSH_BIN="$(command -v zsh || true)"
-if [[ -n "$ZSH_BIN" && "${SHELL:-}" != "$ZSH_BIN" ]]; then
+CURRENT_LOGIN_SHELL="$(getent passwd "$(id -un)" | cut -d: -f7)"
+
+if [[ -z "$ZSH_BIN" ]]; then
+  echo "WARN: zsh not found in PATH; skipping default shell change."
+elif [[ "$CURRENT_LOGIN_SHELL" == "$ZSH_BIN" ]]; then
+  echo "==> Default shell already zsh ($ZSH_BIN)."
+else
   if ! grep -qxF "$ZSH_BIN" /etc/shells 2>/dev/null; then
-    if [[ "$(id -u)" -eq 0 ]]; then
-      echo "$ZSH_BIN" >> /etc/shells
-    else
-      echo "$ZSH_BIN" | sudo tee -a /etc/shells >/dev/null
-    fi
+    echo "$ZSH_BIN" | $SUDO tee -a /etc/shells >/dev/null
   fi
-  if [[ "$(id -u)" -eq 0 ]]; then
-    chsh -s "$ZSH_BIN" root || echo "WARN: chsh failed; set login shell manually."
-  else
-    chsh -s "$ZSH_BIN" || echo "WARN: chsh failed; run manually: chsh -s $ZSH_BIN"
-  fi
+  echo "==> Setting login shell to $ZSH_BIN (was: $CURRENT_LOGIN_SHELL)..."
+  # `sudo chsh -s … <user>` doesn't prompt for the user's password
+  # (sudo already authenticated earlier in apt-get).
+  $SUDO chsh -s "$ZSH_BIN" "$(id -un)" \
+    || echo "WARN: chsh failed; run manually: chsh -s $ZSH_BIN"
 fi
 
 echo "==> Linux bootstrap complete."
