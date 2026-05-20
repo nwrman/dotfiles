@@ -1,7 +1,7 @@
 .DS_STORE
 
 # Machine-local files (not portable)
-home/.secrets
+home/.config/secrets
 .machine-role
 
 # Editor / IDE

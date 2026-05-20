@@ -216,10 +216,10 @@ function magento { php -d memory_limit=2048M ./bin/magento @args }
 function get { curl --continue-at - --location --progress-bar --remote-name --remote-time @args }
 
 # ---------------------------------------------------------------------------
-# 5. Source ~/.secrets if present. Parses KEY=value lines (ignores comments
-#    and `export` prefixes), sets them as session env vars.
+# 5. Source ~/.config/secrets if present. Parses KEY=value lines (ignores
+#    comments and `export` prefixes), sets them as session env vars.
 # ---------------------------------------------------------------------------
-$secrets = "$env:USERPROFILE\.secrets"
+$secrets = "$env:USERPROFILE\.config\secrets"
 if (Test-Path $secrets) {
   Get-Content $secrets | ForEach-Object {
     $line = $_.Trim()

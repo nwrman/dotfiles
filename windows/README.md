@@ -28,7 +28,7 @@ Mirrors `scripts/bootstrap-linux.sh` in spirit:
 4. Installs and configures Clink: `clink-fzf` (Ctrl-T / Ctrl-R / Alt-C), `clink-zoxide` (`cd <fragment>` jumps), `clink-gizmos`, carapace cmd bridge
 5. Chains fnm into cmd's AutoRun so `node -v` auto-switches on `.nvmrc`
 6. Copies cmd shims to `%USERPROFILE%\.bin` and adds it to user PATH: `open`, `pbcopy`, `pbpaste`, `which`
-7. Symlinks (Developer Mode required) or copies selected dotfiles: `home/.gitconfig`, `home/.secrets.example`, `home/.config/lazygit`, `home/.config/gh-dash`, `home/.config/carapace`, and `windows/powershell/profile.ps1` to `$PROFILE.CurrentUserAllHosts`
+7. Symlinks (Developer Mode required) or copies selected dotfiles: `home/.gitconfig`, `home/.config/secrets.example`, `home/.config/lazygit`, `home/.config/gh-dash`, `home/.config/carapace`, and `windows/powershell/profile.ps1` to `$PROFILE.CurrentUserAllHosts`
 
 ## Folder layout
 

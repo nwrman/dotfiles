@@ -2,4 +2,4 @@
 # Only sourced when ~/.machine-role contains "work"
 #
 # Add work-only aliases, PATH entries, or environment variables here.
-# Secrets (tokens, API keys) should go in ~/.secrets instead.
+# Secrets (tokens, API keys) should go in ~/.config/secrets instead.

@@ -31,7 +31,9 @@ if [[ -d $HOME/.zsh ]]; then
 fi
 
 # Source machine-local secrets (API keys, tokens)
-[[ -f ~/.secrets ]] && source ~/.secrets
+SECRETS_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/secrets"
+[[ -f "$SECRETS_FILE" ]] && source "$SECRETS_FILE"
+unset SECRETS_FILE
 
 # Source work-specific config if this is a work machine
 if [[ -f ~/.machine-role ]] && [[ "$(cat ~/.machine-role)" == "work" ]]; then

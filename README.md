@@ -53,9 +53,9 @@ The bootstrap is idempotent but can't reach across machines. Anything secret-bea
 
 **After `install.sh`:**
 
-1. **`~/.secrets`** — create from the template and fill in your values:
+1. **`~/.config/secrets`** — create from the template and fill in your values:
    ```bash
-   cp ~/.homesick/repos/dotfiles/home/.secrets.example ~/.secrets
+   cp ~/.homesick/repos/dotfiles/home/.config/secrets.example ~/.config/secrets
    # Edit: AWS_PROFILE, ANTHROPIC_MODEL, AZURE_DEVOPS_EXT_PAT, etc.
    ```
 2. **Atuin history sync** — pull command history from the sync server:
@@ -91,7 +91,7 @@ See [`windows/README.md`](windows/README.md). The Windows install path is fully 
 1. **Machine role** — prompts for `personal` or `work`, saved to `~/.machine-role`
 2. **Homeshick** — clones if missing, runs `homeshick link dotfiles`
 3. **OS dispatch** — invokes `bootstrap-darwin.sh` or `bootstrap-linux.sh`
-4. **Reminders** — prompts to create `~/.secrets` if missing
+4. **Reminders** — prompts to create `~/.config/secrets` if missing
 
 **macOS (`scripts/bootstrap-darwin.sh`):**
 
@@ -128,12 +128,12 @@ dotfiles/
 │   │   ├── iterm2-prefs/       # iTerm2 prefs (macOS only; inert on Linux)
 │   │   ├── karabiner/          # macOS keyboard remapper (inert on Linux)
 │   │   ├── nix/                # Legacy nix-darwin config (untouched)
+│   │   ├── secrets.example    # Template for machine-local secrets (~/.config/secrets)
 │   │   ├── sublime-text-3/     # Sublime Text settings
 │   │   └── zed/settings.json   # Zed editor settings
 │   ├── .gitconfig
 │   ├── .my.cnf
 │   ├── .p10k.zsh              # Powerlevel10k prompt theme
-│   ├── .secrets.example        # Template for machine-local secrets
 │   ├── .tmux.conf
 │   ├── .zsh/
 │   │   ├── common.zsh         # Shared aliases, exports, PATH
@@ -174,13 +174,13 @@ The file is gitignored and created during bootstrap.
 
 Secrets (API keys, tokens, PATs) are **not** stored in the repo. Instead:
 
-1. A template exists at `home/.secrets.example`
-2. Copy it to `~/.secrets` and fill in your values
-3. `.zshrc` sources `~/.secrets` automatically if it exists
+1. A template exists at `home/.config/secrets.example`
+2. Copy it to `~/.config/secrets` and fill in your values
+3. `.zshrc` sources `~/.config/secrets` automatically if it exists (PowerShell profile does the same on Windows)
 
 ```bash
-cp ~/.homesick/repos/dotfiles/home/.secrets.example ~/.secrets
-# Edit ~/.secrets with your actual values
+cp ~/.homesick/repos/dotfiles/home/.config/secrets.example ~/.config/secrets
+# Edit ~/.config/secrets with your actual values
 ```
 
 ## Managing packages

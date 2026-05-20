@@ -99,12 +99,14 @@ echo "========================================"
 echo "  Bootstrap complete!"
 echo "========================================"
 echo
-if [[ ! -f "$HOME/.secrets" ]]; then
-  echo "  REMINDER: Create ~/.secrets with your API keys and tokens."
-  echo "  A template is available at: ${DOTFILES_DIR}/home/.secrets.example"
-  echo "    cp ${DOTFILES_DIR}/home/.secrets.example ~/.secrets"
-  echo "    # Then edit ~/.secrets with your actual values"
+SECRETS_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/secrets"
+if [[ ! -f "$SECRETS_PATH" ]]; then
+  echo "  REMINDER: Create ${SECRETS_PATH} with your API keys and tokens."
+  echo "  A template is available at: ${DOTFILES_DIR}/home/.config/secrets.example"
+  echo "    cp ${DOTFILES_DIR}/home/.config/secrets.example ${SECRETS_PATH}"
+  echo "    # Then edit ${SECRETS_PATH} with your actual values"
   echo
 fi
+unset SECRETS_PATH
 echo "  You may need to restart your terminal for all changes to take effect."
 echo

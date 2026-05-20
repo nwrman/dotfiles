@@ -144,5 +144,5 @@ alias cr="$_claude_cmd -r" # Resume a previous conversation
 
 alias yz=yazi
 
-# Secrets (API keys, tokens) are loaded from ~/.secrets
-# See ~/.secrets.example for the template.
+# Secrets (API keys, tokens) are loaded from ~/.config/secrets
+# See ~/.config/secrets.example for the template.

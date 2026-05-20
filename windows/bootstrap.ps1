@@ -364,8 +364,8 @@ for /f "tokens=*" %%i in ('fnm env --use-on-cd 2^>nul') do call %%i 2>nul
 Write-Host ""
 Write-Host "==> Placing dotfiles..."
 
-Install-Dotfile -Source "$DotfilesDir\home\.gitconfig"        -Destination "$env:USERPROFILE\.gitconfig"
-Install-Dotfile -Source "$DotfilesDir\home\.secrets.example"  -Destination "$env:USERPROFILE\.secrets.example"
+Install-Dotfile -Source "$DotfilesDir\home\.gitconfig"               -Destination "$env:USERPROFILE\.gitconfig"
+Install-Dotfile -Source "$DotfilesDir\home\.config\secrets.example"  -Destination "$env:USERPROFILE\.config\secrets.example"
 
 # XDG-style configs live under %APPDATA% on Windows (Go's os.UserConfigDir convention).
 $xdgMaps = @(
@@ -440,9 +440,9 @@ Write-Host "========================================"
 Write-Host "  Bootstrap complete."
 Write-Host "========================================"
 Write-Host ""
-if (-not (Test-Path -LiteralPath "$env:USERPROFILE\.secrets")) {
-  Write-Host "  REMINDER: Create $env:USERPROFILE\.secrets from the example:"
-  Write-Host "    copy `"$DotfilesDir\home\.secrets.example`" `"$env:USERPROFILE\.secrets`""
+if (-not (Test-Path -LiteralPath "$env:USERPROFILE\.config\secrets")) {
+  Write-Host "  REMINDER: Create $env:USERPROFILE\.config\secrets from the example:"
+  Write-Host "    copy `"$DotfilesDir\home\.config\secrets.example`" `"$env:USERPROFILE\.config\secrets`""
   Write-Host ""
 }
 Write-Host "  Open a NEW cmd window to pick up:"
