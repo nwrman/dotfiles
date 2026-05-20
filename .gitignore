@@ -3,3 +3,6 @@
 # Machine-local files (not portable)
 home/.secrets
 .machine-role
+
+# Editor / IDE
+.idea/
