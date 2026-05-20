@@ -5,8 +5,9 @@ Cross-platform shell configuration managed with [Homeshick](https://github.com/a
 - **macOS** (Intel and Apple Silicon) — Homebrew + casks + MAS apps + macOS defaults + Touch ID
 - **WSL2 Ubuntu** — apt prereqs + Linuxbrew CLI tools + WSL-aware shims (clipboard, `open`)
 - **Bare Ubuntu** (e.g. DigitalOcean droplet) — same Linux flow; runs cleanly as root, no display required
+- **Native Windows 10/11** — winget + scoop + Clink, no WSL. See [`windows/README.md`](windows/README.md) for the separate Windows install path.
 
-Machine-specific configuration (work vs. personal) is supported on all three.
+Machine-specific configuration (work vs. personal) is supported on all four.
 
 ## Quick start
 
@@ -47,6 +48,10 @@ homeshick pull dotfiles
 homeshick link dotfiles
 brew bundle --file=~/.homesick/repos/dotfiles/Brewfile
 ```
+
+### Windows quick start
+
+See [`windows/README.md`](windows/README.md). The Windows install path is fully separate from `install.sh` / `bootstrap.sh` and lives under `windows/`.
 
 ## What bootstrap does
 
