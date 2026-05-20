@@ -41,6 +41,35 @@ bash scripts/bootstrap.sh work
 bash scripts/bootstrap.sh personal
 ```
 
+### New machine checklist
+
+The bootstrap is idempotent but can't reach across machines. Anything secret-bearing or sign-in-bearing is off-repo by design. Run through this before wiping the old machine.
+
+**Before `install.sh`:**
+
+1. **Sign in to the Mac App Store.** The Brewfile installs apps via `mas` (ColorSlurp, Dropover, Toggl Track) — they silently fail if you're not signed in, and a later re-run won't re-attempt them automatically.
+2. **Have `~/.ssh/id_ed25519` ready.** Not in the repo. Copy from the old machine via 1Password / USB / AirDrop, or generate fresh and register the new public key with GitHub. `setup-extras.sh` will detect it post-bootstrap and add it to Keychain automatically.
+3. **Note your license keys** for paid casks if you don't have them saved elsewhere: PHPStorm, Sublime Text, Affinity, SmartGit, Bartender, Numi, KeyClu, Homerow, Shottr.
+
+**After `install.sh`:**
+
+1. **`~/.secrets`** — create from the template and fill in your values:
+   ```bash
+   cp ~/.homesick/repos/dotfiles/home/.secrets.example ~/.secrets
+   # Edit: AWS_PROFILE, ANTHROPIC_MODEL, AZURE_DEVOPS_EXT_PAT, etc.
+   ```
+2. **Atuin history sync** — pull command history from the sync server:
+   ```bash
+   atuin login   # match credentials from the old Mac
+   atuin sync
+   ```
+   Skip if you've never set up an atuin sync account; history starts fresh locally.
+3. **`gh auth login`** — authenticate the GitHub CLI.
+4. **Raycast settings** — Raycast > Settings > Advanced > Import Settings > `prefs/raycast.rayconfig`. Not automatable.
+5. **Click through permission prompts.** Raycast, Homerow, AltTab, KeyClu, Bartender, Shottr each prompt for Accessibility / Input Monitoring / Screen Recording on first launch. Grant via System Settings > Privacy & Security. macOS will not let scripts grant these on your behalf.
+6. **Sign in to paid casks** with the license keys you saved above.
+7. **Reboot** — ensures all `defaults write` changes take effect (keyboard layout, locale formats, hot corners).
+
 ### Existing machine (update)
 
 ```bash
