@@ -6,7 +6,11 @@ set -euo pipefail
 
 echo "==> Applying macOS defaults..."
 
-[ "$EUID" -ne 0 ] && echo "Sudo is required to disable spotlight"
+# Gating helpers: some defaults keys are perf-oriented (Intel-only) or were
+# reworked in Tahoe (macOS 26) and may be inert on newer systems.
+ARCH="$(uname -m)"
+MACOS_MAJOR="$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)"
+: "${MACOS_MAJOR:=0}"
 
 # ==============================================================================
 # Dock
@@ -38,7 +42,10 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"       # Sear
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"       # Column view
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 defaults write com.apple.finder _FXSortFoldersFirst -bool true
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+# Tahoe reworked Finder's title bar; the undocumented POSIX-path key may be inert on 26+.
+if [[ "$MACOS_MAJOR" -lt 26 ]]; then
+  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+fi
 
 # ==============================================================================
 # Window Manager
@@ -86,14 +93,18 @@ defaults write com.apple.TextInputMenu visible -bool true
 # ==============================================================================
 # Control Center
 # ==============================================================================
-# Sound: Always show in menu bar
-defaults write com.apple.controlcenter "NSStatusItem Visible AudioVideoModule" -int 1
-defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -int 1
-defaults -currentHost write com.apple.controlcenter Sound -int 18
+# Tahoe (26+) reworked menu-bar internals; these NSStatusItem keys may be inert.
+# Skip on 26+ to avoid noise; configure manually via System Settings if needed.
+if [[ "$MACOS_MAJOR" -lt 26 ]]; then
+  # Sound: Always show in menu bar
+  defaults write com.apple.controlcenter "NSStatusItem Visible AudioVideoModule" -int 1
+  defaults write com.apple.controlcenter "NSStatusItem Visible Sound" -int 1
+  defaults -currentHost write com.apple.controlcenter Sound -int 18
 
-# Now Playing: Always hide from menu bar
-defaults write com.apple.controlcenter "NSStatusItem Visible NowPlaying" -int 0
-defaults -currentHost write com.apple.controlcenter NowPlaying -int 8
+  # Now Playing: Always hide from menu bar
+  defaults write com.apple.controlcenter "NSStatusItem Visible NowPlaying" -int 0
+  defaults -currentHost write com.apple.controlcenter NowPlaying -int 8
+fi
 
 # ==============================================================================
 # Custom User Preferences — Locale, weekday, date format
@@ -105,19 +116,27 @@ defaults write NSGlobalDomain AppleICUDateFormatStrings -dict 1 -string "y-MM-dd
 # ==============================================================================
 # Spotlight
 # ==============================================================================
-# Hide menu bar icon
-defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
-
-# Disable indexing on all mounted volumes
-sudo mdutil -a -i off 2>/dev/null || true
+# Tahoe (26+) added AI-powered Spotlight Actions on top of the mdutil index;
+# disabling it kills those features and degrades Raycast/Mail/Notes search.
+# The menu-bar Spotlight icon is also now managed via Control Center on 26+,
+# so MenuItemHidden may be inert. Gate to pre-Tahoe.
+if [[ "$MACOS_MAJOR" -lt 26 ]]; then
+  defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+fi
+# NOTE: Cmd+Space / Cmd+Option+Space (Spotlight shortcuts) are disabled in
+# scripts/import-prefs.sh after the symbolichotkeys import, so Raycast can claim them.
 
 # ==============================================================================
 # Accessibility
 # ==============================================================================
-# Disable Visual "Eye Candy" (Reduce motion and transparency) for better performance
-# Note: Sudo is required for universalaccess on this system
-sudo defaults write com.apple.universalaccess reduceMotion -bool true
-sudo defaults write com.apple.universalaccess reduceTransparency -bool true
+# Reduce Motion / Transparency were added as a performance tweak for older Intel
+# Macs. Apple Silicon doesn't need them, and the previous `sudo defaults write`
+# version wrote to root's prefs (not the current user), so this never worked on
+# Apple Silicon anyway. Gate to Intel only; on M-series this becomes a no-op.
+if [[ "$ARCH" == "x86_64" ]]; then
+  defaults write com.apple.universalaccess reduceMotion -bool true
+  defaults write com.apple.universalaccess reduceTransparency -bool true
+fi
 
 # ==============================================================================
 # Touch Bar

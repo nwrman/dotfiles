@@ -153,10 +153,6 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always $realpath'
 
-# Aliases
-alias vim='nvim'
-alias c='clear'
-
 # Shell integrations
 
 # Television — context-aware smart autocomplete (Ctrl+T)

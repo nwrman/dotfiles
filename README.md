@@ -98,8 +98,9 @@ See [`windows/README.md`](windows/README.md). The Windows install path is fully 
 - Installs Homebrew if missing; `brew update`
 - `brew bundle` against `Brewfile` (and `Brewfile.work` on work machines)
 - Applies `macos-defaults.sh` (Dock, Finder, trackpad, keyboard, …)
-- Enables Touch ID for sudo, configures Spicetify
+- Enables Touch ID for sudo, adds SSH key to Keychain
 - Imports app preferences for AltTab, Bartender, Shottr, KeyClu, Homerow, iTerm2
+- Disables Spotlight shortcuts (Cmd+Space, Cmd+Option+Space) so Raycast can claim them
 
 **Linux — WSL2 and bare Ubuntu (`scripts/bootstrap-linux.sh`):**
 
@@ -109,7 +110,7 @@ See [`windows/README.md`](windows/README.md). The Windows install path is fully 
 - `brew bundle` against `Brewfile.linux` (and `Brewfile.work.linux` on work machines)
 - Sets `zsh` as the login shell
 
-**Skipped on Linux:** macOS-only steps — Touch ID, MAS apps, casks, Karabiner/iTerm2/Raycast/Bartender, `macos-defaults.sh`. The `home/.config/iterm2-prefs/`, `home/.config/karabiner/`, and `home/.config/nix/` directories are still symlinked into `$HOME` but are inert since the apps don't exist.
+**Skipped on Linux:** macOS-only steps — Touch ID, MAS apps, casks, Karabiner/iTerm2/Raycast/Bartender, `macos-defaults.sh`. The `home/.config/iterm2-prefs/` and `home/.config/karabiner/` directories are still symlinked into `$HOME` but are inert since the apps don't exist.
 
 > **Note for small droplets:** Linuxbrew may compile some formulae from source on first run, which is slow on a 1GB droplet. Recommend ≥2GB RAM for the initial bootstrap.
 
@@ -127,7 +128,6 @@ dotfiles/
 │   │   ├── ghostty/config      # Ghostty terminal config
 │   │   ├── iterm2-prefs/       # iTerm2 prefs (macOS only; inert on Linux)
 │   │   ├── karabiner/          # macOS keyboard remapper (inert on Linux)
-│   │   ├── nix/                # Legacy nix-darwin config (untouched)
 │   │   ├── secrets.example    # Template for machine-local secrets (~/.config/secrets)
 │   │   ├── sublime-text-3/     # Sublime Text settings
 │   │   └── zed/settings.json   # Zed editor settings

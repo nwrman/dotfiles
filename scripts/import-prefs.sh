@@ -43,6 +43,15 @@ if defaults read com.googlecode.iterm2 &>/dev/null 2>&1 || [[ -d "/Applications/
   echo "    Configured iTerm2 to load prefs from ~/.config/iterm2-prefs/"
 fi
 
+# Disable Spotlight shortcuts (Cmd+Space = key 64, Cmd+Option+Space = key 65)
+# so Raycast can claim them. Runs AFTER the symbolichotkeys.plist import above
+# to avoid being overwritten.
+for key in 64 65; do
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add "$key" \
+    '<dict><key>enabled</key><false/></dict>'
+done
+echo "    Disabled Spotlight shortcuts (Cmd+Space, Cmd+Option+Space) for Raycast"
+
 echo
 echo "==> Preferences imported. Restart apps for changes to take effect."
 echo

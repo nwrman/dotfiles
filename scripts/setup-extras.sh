@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup-extras.sh — Spicetify, Touch ID sudo, and other extras
+# setup-extras.sh — Touch ID sudo, SSH keychain, and other extras
 # Idempotent: safe to re-run at any time.
 set -euo pipefail
 

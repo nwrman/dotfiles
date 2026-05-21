@@ -1,3 +1,6 @@
+# vim → nvim
+alias vim='nvim'
+
 # Composer
 if [[ -s "~/.composer/vendor/bin" ]]; then
   export PATH=$PATH:~/.composer/vendor/bin

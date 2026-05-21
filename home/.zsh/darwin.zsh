@@ -7,6 +7,11 @@ elif [[ -x "/usr/local/bin/brew" ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
+# mysql-client is keg-only; add its bin to PATH so `mysql` resolves.
+if [[ -d "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/mysql-client/bin" ]]; then
+  export PATH="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/mysql-client/bin:$PATH"
+fi
+
 # Sublime Text CLI
 if [[ -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
   export PATH="$PATH:/Applications/Sublime Text.app/Contents/SharedSupport/bin"
