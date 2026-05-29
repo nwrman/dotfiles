@@ -139,7 +139,7 @@ alias oc=opencode
 alias occ='opencode -c'
 alias pic='pi -c'
 
-_claude_cmd="claude --allow-dangerously-skip-permissions"
+_claude_cmd="claude --dangerously-skip-permissions"
 
 alias cl="$_claude_cmd"
 alias cc="$_claude_cmd -c" # Continue most recent conversation in current directory
