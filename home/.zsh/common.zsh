@@ -1,9 +1,13 @@
 # vim → nvim
 alias vim='nvim'
 
-# Composer
-if [[ -s "~/.composer/vendor/bin" ]]; then
-  export PATH=$PATH:~/.composer/vendor/bin
+# Composer global bin (XDG location is the current default; legacy ~/.composer
+# kept for older installs).
+if [[ -d "$HOME/.config/composer/vendor/bin" ]]; then
+  export PATH="$HOME/.config/composer/vendor/bin:$PATH"
+fi
+if [[ -d "$HOME/.composer/vendor/bin" ]]; then
+  export PATH="$HOME/.composer/vendor/bin:$PATH"
 fi
 
 # nvm
@@ -24,7 +28,7 @@ alias tb="./vendor/bin/pest --bail"
 alias ct="composer test"
 alias cut="composer test:unit"
 alias ctt="composer test:types"
-alias a="./artisan"
+alias a="php artisan"
 alias dcu="docker-compose up -d"
 alias dcs="docker-compose stop"
 alias dcr="dcs && dcu"
@@ -146,6 +150,18 @@ alias cc="$_claude_cmd -c" # Continue most recent conversation in current direct
 alias cr="$_claude_cmd -r" # Resume a previous conversation
 
 alias yz=yazi
+
+# Convert a Markdown file to PDF via md-to-pdf (headless Chrome under the hood).
+md2pdf() {
+  if [[ $# -lt 1 ]]; then
+    echo "usage: md2pdf <file.md>" >&2
+    return 1
+  fi
+
+  npx --yes md-to-pdf "$1" \
+    --css "body { font-size: 12pt; line-height: 1.55; } h1 { font-size: 22pt; } h2 { font-size: 17pt; } h3 { font-size: 14pt; } code, pre { font-size: 10.5pt; }" \
+    && open "${1%.md}.pdf"
+}
 
 # Secrets (API keys, tokens) are loaded from ~/.config/secrets
 # See ~/.config/secrets.example for the template.

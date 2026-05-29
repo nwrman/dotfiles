@@ -19,7 +19,18 @@ fi
 
 # SmartGit launcher
 if [[ -s "/Applications/SmartGit.app/Contents/MacOS/" ]]; then
-  alias sg="/Applications/SmartGit.app/Contents/MacOS/SmartGit --open . &"
+  sg() {
+    if (( $# == 0 )); then
+      open -a SmartGit
+    else
+      local -a paths
+      local arg
+      for arg in "$@"; do
+        paths+=("${arg:a}")
+      done
+      open -a SmartGit --args --open "${paths[@]}"
+    fi
+  }
 fi
 
 alias pbc=pbcopy
