@@ -76,6 +76,23 @@ homeshick --batch --force link dotfiles
 echo
 
 # ==============================================================================
+# Step 2.5: Use SSH for the dotfiles remote (so pushes don't prompt for a password)
+# ==============================================================================
+# Homeshick clones over HTTPS, which can't push without credential prompts.
+# Rewrite the origin remote to SSH form. Idempotent: only acts on an HTTPS
+# github.com URL, leaves SSH (or any other) remotes untouched.
+DOTFILES_ORIGIN="$(git -C "$DOTFILES_DIR" remote get-url origin 2>/dev/null || true)"
+if [[ "$DOTFILES_ORIGIN" =~ ^https://github\.com/(.+)$ ]]; then
+  SSH_URL="git@github.com:${BASH_REMATCH[1]%.git}.git"
+  git -C "$DOTFILES_DIR" remote set-url origin "$SSH_URL"
+  echo "==> Dotfiles remote: switched origin to SSH (${SSH_URL})"
+else
+  echo "==> Dotfiles remote: origin not HTTPS github.com, leaving as-is (${DOTFILES_ORIGIN:-none})"
+fi
+unset DOTFILES_ORIGIN SSH_URL
+echo
+
+# ==============================================================================
 # Step 3: Dispatch to OS-specific bootstrap
 # ==============================================================================
 case "$(uname -s)" in
