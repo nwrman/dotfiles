@@ -8,8 +8,17 @@
   "enabledPlugins": {
     "plannotator@plannotator": true
   },
+  "extraKnownMarketplaces": {
+    "plannotator": {
+      "source": {
+        "source": "github",
+        "repo": "backnotprop/plannotator"
+      }
+    }
+  },
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
-  "gitAttribution": false
+  "gitAttribution": false,
+  "skipAutoPermissionPrompt": true
 }
