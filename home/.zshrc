@@ -161,12 +161,6 @@ if type tv &>/dev/null; then
     eval "$(tv init zsh)"
 fi
 
-if type zoxide &>/dev/null; then
-    eval "$(zoxide init --cmd cd zsh)"
-    alias z=__zoxide_z
-    alias zi=__zoxide_zi
-fi
-
 # Atuin — enhanced shell history with context-aware fuzzy search
 if type atuin &>/dev/null; then
   eval "$(atuin init zsh)"
@@ -206,6 +200,46 @@ fi
 # Local binaries
 [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
 
+# DBngin PostgreSQL client tools (psql, pg_dump, pg_restore, pg_ctl, …)
+[[ -d "/Users/Shared/DBngin/postgresql/18.1/bin" ]] && export PATH="/Users/Shared/DBngin/postgresql/18.1/bin:$PATH"
+
 # Tool-injected PATH additions
 # These are added/modified by tool installers (Herd, Bun, Vite+, etc.)
 
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"
+
+
+# Herd injected PHP 8.4 configuration.
+export HERD_PHP_84_INI_SCAN_DIR="/Users/nwrman/Library/Application Support/Herd/config/php/84/"
+
+
+# Herd injected PHP binary.
+export PATH="/Users/nwrman/Library/Application Support/Herd/bin/":$PATH
+
+
+# Herd injected PHP 8.5 configuration.
+export HERD_PHP_85_INI_SCAN_DIR="/Users/nwrman/Library/Application Support/Herd/config/php/85/"
+
+# bun completions
+[ -s "/Users/nwrman/.bun/_bun" ] && source "/Users/nwrman/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/nwrman/.opencode/bin:$PATH
+
+if command -v ngrok &>/dev/null; then
+    eval "$(ngrok completion)"
+  fi
+
+# zoxide — must be last so its chpwd hook sees every directory change
+# (zoxide warns if anything else installs hooks or modifies the shell after it)
+if type zoxide &>/dev/null; then
+    eval "$(zoxide init --cmd cd zsh)"
+    alias z=__zoxide_z
+    alias zi=__zoxide_zi
+fi
