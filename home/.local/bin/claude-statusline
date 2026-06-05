@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+# Claude Code status line.
+# Reads session JSON on stdin (schema: https://code.claude.com/docs/en/statusline)
+# and prints two rows:
+#   line 1 — project identity ("where am I"), in a per-project accent color
+#   line 2 — session stats (model, effort, cost, context usage)
+# Every field has a fallback so the line always prints; empty output or a
+# non-zero exit would blank the status line.
+
+input=$(cat)
+
+# --- Extract all fields in one jq pass, tab-separated. --------------------
+# Each field falls back to "" (not `empty`) so every column is always present
+# — `// empty` would drop the array element and shift every later field.
+# Fields are joined with US (\037), a NON-whitespace separator: `read` collapses
+# runs of IFS-whitespace (tab/space), which would erase empty optional fields,
+# but it preserves empty fields when the separator isn't whitespace.
+IFS=$'\037' read -r \
+  MODEL DIR PROJECT_DIR REPO_OWNER REPO_NAME SESSION_NAME EFFORT \
+  COST PCT CTX_SIZE SESSION_ID TRANSCRIPT <<EOF
+$(printf '%s' "$input" | jq -r '
+  [ (.model.display_name // "")
+  , (.workspace.current_dir // .cwd // "")
+  , (.workspace.project_dir // "")
+  , (.workspace.repo.owner // "")
+  , (.workspace.repo.name // "")
+  , (.session_name // "")
+  , (.effort.level // "")
+  , (.cost.total_cost_usd // 0)
+  , (.context_window.used_percentage // 0)
+  , (.context_window.context_window_size // 0)
+  , (.session_id // "")
+  , (.transcript_path // "")
+  ] | map(tostring) | join("")')
+EOF
+
+# --- Colors. --------------------------------------------------------------
+RESET=$'\033[0m'
+DIM=$'\033[2m'
+GREEN=$'\033[32m'
+YELLOW=$'\033[33m'
+RED=$'\033[31m'
+
+# Per-project accent: a stable hue derived from the project path, so every
+# window for a given project wears the same color and different projects look
+# different at a glance. Curated 256-color palette, all readable on a dark bg.
+PALETTE=(39 208 41 170 220 51 203 141 113 214 81 199 156 117)
+hash=$(printf '%s' "${PROJECT_DIR:-$DIR}" | cksum | cut -d' ' -f1)
+ACCENT=$'\033[38;5;'"${PALETTE[$((hash % ${#PALETTE[@]}))]}"'m'
+
+# --- Directory, p10k style: ~ for home, parents shortened to one char, ----
+# last two components kept whole, e.g. ~/.homesick/repos/dotfiles -> ~/.h/repos/dotfiles
+shorten_path() {
+  local p=$1
+  case "$p" in
+    "$HOME") printf '~'; return ;;
+    "$HOME"/*) p="~/${p#$HOME/}" ;;
+  esac
+  local IFS='/' parts=() out=() n i
+  read -r -a parts <<<"$p"
+  n=${#parts[@]}
+  for i in "${!parts[@]}"; do
+    local seg=${parts[$i]}
+    if [ -z "$seg" ] || [ $((n - i)) -le 2 ] || [ "$seg" = "~" ]; then
+      out+=("$seg")
+    else
+      # keep leading dot for hidden dirs (.homesick -> .h)
+      case "$seg" in
+        .?*) out+=(".${seg:1:1}") ;;
+        *)   out+=("${seg:0:1}") ;;
+      esac
+    fi
+  done
+  ( IFS='/'; printf '%s' "${out[*]}" )
+}
+SHORT_DIR=$(shorten_path "$DIR")
+
+# --- Git segment, cached 5s per session (git can lag big repos). ----------
+git_segment() {
+  local cache="/tmp/statusline-git-${SESSION_ID:-nosession}"
+  local max_age=5 now mtime
+  now=$(date +%s)
+  mtime=$(stat -f %m "$cache" 2>/dev/null || stat -c %Y "$cache" 2>/dev/null || echo 0)
+  if [ ! -f "$cache" ] || [ $((now - mtime)) -gt "$max_age" ]; then
+    local out="" g=(git -C "${DIR:-.}")
+    if "${g[@]}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      local branch ahead behind marks=""
+      branch=$("${g[@]}" branch --show-current 2>/dev/null)
+      [ -z "$branch" ] && branch=$("${g[@]}" rev-parse --short HEAD 2>/dev/null)
+      [ -n "$("${g[@]}" status --porcelain 2>/dev/null)" ] && marks+="*"
+      ahead=$("${g[@]}" rev-list --count @{upstream}..HEAD 2>/dev/null) || ahead=0
+      behind=$("${g[@]}" rev-list --count HEAD..@{upstream} 2>/dev/null) || behind=0
+      [ "${ahead:-0}" -gt 0 ] 2>/dev/null && marks+="⇡${ahead}"
+      [ "${behind:-0}" -gt 0 ] 2>/dev/null && marks+="⇣${behind}"
+      out="${branch}${marks}"
+    fi
+    printf '%s' "$out" >"$cache"
+  fi
+  cat "$cache" 2>/dev/null
+}
+GIT=$(git_segment)
+
+# --- Session title + rename state, cached 5s (transcript can be large). ----
+# Claude Code shows a native top-right badge ONLY after a manual /rename (or
+# --name), which writes a {"type":"custom-title"} record to the transcript.
+# Before that there's no badge, so we surface the title here; after a rename the
+# badge owns the name and we drop our bracket to avoid showing it twice.
+#   RENAMED  — 1 once a custom-title record exists (sticky: a rename never reverts)
+#   AI_TITLE — latest auto title, used as a fallback when session_name is empty
+RENAMED=0; AI_TITLE=""
+session_meta() {
+  local cache="/tmp/statusline-meta-${SESSION_ID:-nosession}"
+  local max_age=5 now mtime
+  now=$(date +%s)
+  mtime=$(stat -f %m "$cache" 2>/dev/null || stat -c %Y "$cache" 2>/dev/null || echo 0)
+  # Refresh unless the cache is fresh, or already records a (sticky) rename.
+  if [ ! -f "$cache" ] || { [ $((now - mtime)) -gt "$max_age" ] && ! grep -q '^1' "$cache"; }; then
+    local r=0 t=""
+    if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ]; then
+      grep -q '"type":"custom-title"' "$TRANSCRIPT" && r=1
+      t=$(grep '"type":"ai-title"' "$TRANSCRIPT" | tail -1 | jq -r '.aiTitle // ""' 2>/dev/null)
+    fi
+    printf '%s\t%s' "$r" "$t" >"$cache"
+  fi
+  IFS=$'\t' read -r RENAMED AI_TITLE <"$cache"
+}
+session_meta
+
+# --- Line 1: identity, accent-colored. ------------------------------------
+line1=""
+title=${SESSION_NAME:-$AI_TITLE}
+[ -n "$title" ] && [ "$RENAMED" != 1 ] && line1+="${ACCENT}[${title}]${RESET} "
+line1+="${ACCENT}${SHORT_DIR}${RESET}"
+[ -n "$GIT" ] && line1+="  ${DIM}${GIT}${RESET}"
+
+# --- Line 2: session stats. -----------------------------------------------
+line2="${MODEL}"
+[ -n "$EFFORT" ] && line2+=" ${DIM}· ${EFFORT}${RESET}"
+
+# Cost (omit when zero/empty).
+if [ -n "$COST" ] && ! printf '%s' "$COST" | grep -qE '^0(\.0+)?$'; then
+  line2+="   ${DIM}\$$(printf '%.2f' "$COST")${RESET}"
+fi
+
+# Context usage, threshold-colored.
+PCT_INT=${PCT%%.*}; PCT_INT=${PCT_INT:-0}
+if [ "$PCT_INT" -ge 90 ]; then ctx_color=$RED
+elif [ "$PCT_INT" -ge 70 ]; then ctx_color=$YELLOW
+else ctx_color=$GREEN; fi
+line2+="   ${ctx_color}ctx ${PCT_INT}%${RESET}"
+
+printf '%b\n%b\n' "$line1" "$line2"
